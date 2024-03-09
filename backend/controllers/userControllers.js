@@ -38,3 +38,45 @@ export const updateUserProfile = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const deleteUser = async (req, res) => {
+    try {
+        const { userId } = req.params
+        const loggedInUserId = req.user.userId
+        const loggedInUserIsAdmin = req.user.isAdmin
+
+        if(loggedInUserId.toString() !== userId && !loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to delete other user's profile." })
+
+        const user = await User.findById(userId)
+        if(!user) return res.status(404).json({ error: "User not found." })
+
+        if(user.profilePicture) {
+            const userProfilePictureId = user.profilePicture.split("/").pop().split(".")[0]
+            await cloudinary.uploader.destroy(userProfilePictureId)
+        }
+
+        await User.findByIdAndDelete(userId)
+
+        res.status(200).json({ msg: "User is successfully deleted." })
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getAllUsers = async (req, res) => {
+    try {
+        const loggedInUserId = req.user.userId
+        const loggedInUserIsAdmin = req.user.isAdmin
+        if(!loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to get all users." })
+
+        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password")
+
+        res.status(200).json(users)
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}

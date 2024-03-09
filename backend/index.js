@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary"
 import connectToMongoDB from "./db/connectToMongoDB.js"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
+import postRoutes from "./routes/postRoutes.js"
 
 dotenv.config()
 const app = express()
@@ -22,6 +23,7 @@ cloudinary.config({
 // ROUTES
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
+app.use("/api/posts", postRoutes)
 
 const PORT = process.env.PORT || 6001
 connectToMongoDB()
