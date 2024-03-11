@@ -72,7 +72,7 @@ const SignInPage = () => {
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
                     <Button type="submit" disabled={isLoading} variant="contained">
-                    {isLoading ? <CircularProgress size={20}/> : "Sign In"}
+                        {isLoading ? <CircularProgress size={20}/> : "Sign In"}
                     </Button>
                 </Stack>
                 <Link component={RouterLink} to={"/signup"} variant="body1">
