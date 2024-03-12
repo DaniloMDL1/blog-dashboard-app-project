@@ -1,12 +1,15 @@
-import { Alert, Avatar, Box, Button, CircularProgress, FormControl, InputLabel, Stack, TextField, Typography } from "@mui/material"
+import { Alert, Avatar, Box, Button, CircularProgress, FormControl, InputLabel, Modal, Stack, TextField, Typography } from "@mui/material"
 import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import usePreviewImg from "../hooks/usePreviewImg"
 import { toast } from "react-toastify"
 import axios from "axios"
 import { updateUserProfile } from "../redux/user/userSlice"
+import { useTheme } from "@emotion/react"
+import useDeleteUser from "../hooks/useDeleteUser"
 
 const ProfilePage = () => {
+    const theme = useTheme()
     const avatarRef = useRef(null)
     const { user } = useSelector((state) => state.user)
     const dispatch = useDispatch()
@@ -18,6 +21,11 @@ const ProfilePage = () => {
     })
     const [isLoading, setIsLoading] = useState(false)
     const { previewImg, handlePreviewImgChange, errorMsg } = usePreviewImg()
+    const { handleDeleteUser, isLoading: isDeleteLoading } = useDeleteUser()
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
@@ -45,7 +53,7 @@ const ProfilePage = () => {
 
     return (
         <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ minHeight: "calc(100vh - 68px)"}}>
-            <Stack onSubmit={handleUpdateProfile} component={"form"} width={{ xs: "300px", sm: "420px"}} sx={{ border: "1px solid grey", p: 3}}>
+            <Stack onSubmit={handleUpdateProfile} component={"form"} width={{ xs: "300px", sm: "420px"}} sx={{ border: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040", borderRadius: "8px", p: 3}}>
                 <Typography variant="h6" mb={"14px"}>Update Profile</Typography>
                 {errorMsg && (
                     <Alert severity="error" sx={{ mb: 2 }}>
@@ -105,9 +113,36 @@ const ProfilePage = () => {
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
                 </FormControl>
-                <Button type="submit" sx={{ textTransform: "capitalize", fontSize: "15px", mt: "18px"}} disabled={isLoading} variant="contained">
+                <Button type="submit" sx={{ fontSize: "15px", mt: "18px"}} disabled={isLoading} variant="contained">
                     {isLoading ? <CircularProgress size={18}/> : "Update Profile"}
                 </Button>
+                <Box onClick={handleOpen} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
+                    Delete Account
+                </Box>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: {xs: "260px", sm: "460px", height: "140px", backgroundColor: theme.palette.background.default, border: "none" }}}>
+                        <Box sx={{ p: 3}}>
+                            <Typography sx={{ fontSize: { xs: "14px", sm: "18px"}}}>
+                                Are you sure you want to delete your account?
+                            </Typography>
+                            <Stack flexDirection={"row"} mt={3} alignItems={"center"} gap={3} justifyContent={"flex-end"}>
+                                <Button onClick={() => handleDeleteUser(user._id)} disabled={isDeleteLoading} variant="contained" sx={{ backgroundColor: "#f44336", color: "#ffffff", "&:hover": {
+                                    backgroundColor: "#d32f2f"
+                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px", height: "37px"}}>
+                                    {isDeleteLoading ? <CircularProgress color="inherit" size={14}/> : "Delete"}
+                                </Button>
+                                <Button onClick={handleClose} sx={{ backgroundColor: "#757575", color: "#ffffff", "&:hover": {
+                                    backgroundColor: "#616161"
+                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px"}}>
+                                    Cancel
+                                </Button>
+                            </Stack>
+                        </Box>
+                    </Box>
+                </Modal>
             </Stack>
         </Box>
     )
