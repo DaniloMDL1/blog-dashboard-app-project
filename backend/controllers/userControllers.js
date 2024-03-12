@@ -21,6 +21,11 @@ export const updateUserProfile = async (req, res) => {
         }
 
         if(profilePicture) {
+            if(user.profilePicture) {
+                const userProfilePictureId = user.profilePicture.split("/").pop().split(".")[0]
+                await cloudinary.uploader.destroy(userProfilePictureId)
+            }
+
             const uploadedResponse = await cloudinary.uploader.upload(profilePicture)
             profilePicture = uploadedResponse.secure_url
         }
@@ -31,9 +36,16 @@ export const updateUserProfile = async (req, res) => {
         user.profilePicture = profilePicture || user.profilePicture
 
         user = await user.save()
-        res.status(200).json(user)
+
+        const { password: pass, ...userInfo } = user._doc
+        res.status(200).json(userInfo)
         
     } catch(error) {
+        if(error.code === 11000) {
+            if(error.keyPattern.email) return res.status(400).json({ error: "Email already exists."})
+            if(error.keyPattern.username) return res.status(400).json({ error: "Username already exists."})
+        }
+
         console.log(error)
         res.status(500).json({ error: error.message })
     }

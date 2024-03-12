@@ -63,6 +63,7 @@ const SignUpPage = () => {
                         type="text"
                         label="Full Name"
                         size="small"
+                        autoComplete="off"
                         value={inputs.fullName}
                         onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
                     />
@@ -70,6 +71,7 @@ const SignUpPage = () => {
                         type="text"
                         label="Username"
                         size="small"
+                        autoComplete="off"
                         value={inputs.username}
                         onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
                     />
@@ -77,6 +79,7 @@ const SignUpPage = () => {
                         type="text"
                         label="Email Address"
                         size="small"
+                        autoComplete="off"
                         value={inputs.email}
                         onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
                     />
@@ -84,6 +87,7 @@ const SignUpPage = () => {
                         type="password"
                         label="Password"
                         size="small"
+                        autoComplete="off"
                         value={inputs.password}
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />

@@ -1,12 +1,12 @@
 import { useTheme } from "@emotion/react"
-import { Avatar, Button, CircularProgress, Container, IconButton, Link, Menu, MenuItem, Stack } from "@mui/material"
-import { Link as RouterLink } from "react-router-dom"
-import DarkModeIcon from '@mui/icons-material/DarkMode'
-import LightModeIcon from '@mui/icons-material/LightMode'
+import { Avatar, CircularProgress, Container, IconButton, Link, Menu, MenuItem, Stack } from "@mui/material"
+import { Link as RouterLink, useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { setMode } from "../redux/user/userSlice"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useSignOut from "../hooks/useSignOut"
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
 const Header = () => {
     const theme = useTheme()
@@ -15,6 +15,7 @@ const Header = () => {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
     const { isLoading, handleSignOut } = useSignOut()
+    const { pathname } = useLocation()
 
     const handleClick = (e) => {
         setAnchorEl(e.currentTarget)
@@ -23,6 +24,12 @@ const Header = () => {
     const handleClose = () => {
         setAnchorEl(null)
     }
+
+    useEffect(() => {
+        return () => {
+            setAnchorEl(null)
+        }
+    }, [pathname])
 
     return (
         <>
@@ -50,10 +57,10 @@ const Header = () => {
                         </Link>
                         <Stack flexDirection={"row"} alignItems={"center"} gap={3}>
                             <IconButton sx={{ color: theme.palette.text.primary }} onClick={() => dispatch(setMode())}>
-                                {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+                                {mode === "light" ? <Brightness4Icon /> : <Brightness7Icon />}
                             </IconButton>
                             <IconButton onClick={handleClick}>
-                                <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+                                <Avatar src={user.profilePicture} sx={{ width: 32, height: 32 }}>{user.username[0].toUpperCase()}</Avatar>
                             </IconButton>
                             <Menu
                                 elevation={3}
@@ -70,7 +77,7 @@ const Header = () => {
                                     }
                                 }}
                             >
-                                <MenuItem>Profile</MenuItem>
+                                <MenuItem component={RouterLink} to="/profile">Profile</MenuItem>
                                 {user.isAdmin && (
                                     <MenuItem>Dashboard</MenuItem>
                                 )}

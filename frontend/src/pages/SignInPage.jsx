@@ -52,7 +52,7 @@ const SignInPage = () => {
                     Sign In
                 </Typography>
                 {errorMsg && (
-                    <Alert severity="error" sx={{ my: "10px"}}>
+                    <Alert severity="error" sx={{ my: "20px"}}>
                         {errorMsg}
                     </Alert>
                 )}
@@ -60,6 +60,7 @@ const SignInPage = () => {
                     <TextField 
                         type="text"
                         label="Email Address"
+                        autoComplete="off"
                         size="small"
                         value={inputs.email}
                         onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
@@ -67,6 +68,7 @@ const SignInPage = () => {
                     <TextField 
                         type="password"
                         label="Password"
+                        autoComplete="off"
                         size="small"
                         value={inputs.password}
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
