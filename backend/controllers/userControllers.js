@@ -81,11 +81,17 @@ export const getAllUsers = async (req, res) => {
     try {
         const loggedInUserId = req.user.userId
         const loggedInUserIsAdmin = req.user.isAdmin
+        const page = parseInt(req.query.page) || 0
+        const pageSize = parseInt(req.query.pageSize) || 5
+        const skip = page * pageSize
+
         if(!loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to get all users." })
 
-        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password")
+        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password").skip(skip).limit(pageSize)
 
-        res.status(200).json(users)
+        const totalUsers = await User.countDocuments({ _id : { $ne: loggedInUserId }})
+
+        res.status(200).json({ users, totalUsers })
         
     } catch(error) {
         console.log(error)

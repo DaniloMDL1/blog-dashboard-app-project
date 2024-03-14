@@ -34,7 +34,7 @@ const Header = () => {
     return (
         <>
             {!user ? (
-                <Container maxWidth="md" sx={{ py: "10px"}}>
+                <Container maxWidth="md" sx={{ py: "10px" }}>
                     <Stack flexDirection={"row"} justifyContent={"space-between"}>
                         <Link component={RouterLink} to={"/"} variant="h5" sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
                             Blog App
@@ -50,7 +50,7 @@ const Header = () => {
                     </Stack>
                 </Container>
             ) : (
-                <Container maxWidth="md" sx={{ py: "10px"}}>
+                <Container maxWidth="md" sx={{ py: "10px" }}>
                     <Stack flexDirection={"row"} justifyContent={"space-between"}>
                         <Link component={RouterLink} to={"/"} variant="h5" sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
                             Blog App
@@ -79,7 +79,7 @@ const Header = () => {
                             >
                                 <MenuItem component={RouterLink} to="/profile">Profile</MenuItem>
                                 {user.isAdmin && (
-                                    <MenuItem>Dashboard</MenuItem>
+                                    <MenuItem component={RouterLink} to="/dashboard/users">Dashboard</MenuItem>
                                 )}
                                 <MenuItem onClick={handleSignOut} disabled={isLoading}>
                                     {isLoading ? <CircularProgress size={18}/> : "Sign Out"}

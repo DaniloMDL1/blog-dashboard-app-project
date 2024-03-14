@@ -3,12 +3,14 @@ import HomePage from "./pages/HomePage"
 import SignUpPage from "./pages/SignUpPage"
 import SignInPage from "./pages/SignInPage"
 import ProfilePage from "./pages/ProfilePage"
+import DashboardPage from "./pages/DashboardPage"
 import CssBaseline from '@mui/material/CssBaseline'
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
 import { useSelector } from "react-redux"
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import DashboardUsers from "./components/DashboardUsers"
 
 const App = () => {
   const { mode, user } = useSelector((state) => state.user)
@@ -27,6 +29,9 @@ const App = () => {
           <Route element={<HeaderLayout />}>
             <Route path="/" element={<HomePage />}/>
             <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
+            <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
+              <Route path="users" element={<DashboardUsers />}/>
+            </Route>
             <Route path="/signup" element={<SignUpPage />}/>
             <Route path="/signin" element={<SignInPage />}/>
           </Route>

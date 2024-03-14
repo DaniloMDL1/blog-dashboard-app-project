@@ -73,8 +73,12 @@ const SignInPage = () => {
                         value={inputs.password}
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
-                    <Button type="submit" disabled={isLoading} variant="contained">
-                        {isLoading ? <CircularProgress size={20}/> : "Sign In"}
+                    <Button type="submit" disabled={isLoading} variant="contained" sx={{
+                        "&.Mui-disabled": {
+                            backgroundColor: theme.palette.primary.main
+                        }
+                    }}>
+                        {isLoading ? <CircularProgress size={24} sx={{ color: "#ffffff"}}/> : "Sign In"}
                     </Button>
                 </Stack>
                 <Link component={RouterLink} to={"/signup"} variant="body1">

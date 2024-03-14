@@ -7,6 +7,7 @@ import axios from "axios"
 import { updateUserProfile } from "../redux/user/userSlice"
 import { useTheme } from "@emotion/react"
 import useDeleteUser from "../hooks/useDeleteUser"
+import useSignOut from "../hooks/useSignOut"
 
 const ProfilePage = () => {
     const theme = useTheme()
@@ -22,6 +23,7 @@ const ProfilePage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { previewImg, handlePreviewImgChange, errorMsg } = usePreviewImg()
     const { handleDeleteUser, isLoading: isDeleteLoading } = useDeleteUser()
+    const { handleSignOut } = useSignOut()
     const [open, setOpen] = useState(false)
 
     const handleOpen = () => setOpen(true)
@@ -104,7 +106,7 @@ const ProfilePage = () => {
                 <FormControl>
                     <InputLabel sx={{ mx: "-10px"}}>Password</InputLabel>
                     <TextField 
-                        type="text"
+                        type="password"
                         size="small"
                         placeholder="Password"
                         autoComplete="off"
@@ -113,12 +115,19 @@ const ProfilePage = () => {
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
                 </FormControl>
-                <Button type="submit" sx={{ fontSize: "15px", mt: "18px"}} disabled={isLoading} variant="contained">
-                    {isLoading ? <CircularProgress size={18}/> : "Update Profile"}
+                <Button type="submit" sx={{ fontSize: "15px", mt: "18px", "&.Mui-disabled": {
+                    backgroundColor: theme.palette.primary.main
+                }, height: "40px"}} disabled={isLoading} variant="contained">
+                    {isLoading ? <CircularProgress size={24} sx={{ color: "#ffffff"}}/> : "Update Profile"}
                 </Button>
-                <Box onClick={handleOpen} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
-                    Delete Account
-                </Box>
+                <Stack flexDirection={"row"} justifyContent={"space-between"} px={1}>
+                    <Box onClick={handleOpen} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
+                        Delete Account
+                    </Box>
+                    <Box onClick={handleSignOut} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
+                        Sign Out
+                    </Box>
+                </Stack>
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -131,8 +140,10 @@ const ProfilePage = () => {
                             <Stack flexDirection={"row"} mt={3} alignItems={"center"} gap={3} justifyContent={"flex-end"}>
                                 <Button onClick={() => handleDeleteUser(user._id)} disabled={isDeleteLoading} variant="contained" sx={{ backgroundColor: "#f44336", color: "#ffffff", "&:hover": {
                                     backgroundColor: "#d32f2f"
-                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px", height: "37px"}}>
-                                    {isDeleteLoading ? <CircularProgress color="inherit" size={14}/> : "Delete"}
+                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px", height: "37px", "&.Mui-disabled": {
+                                    backgroundColor: "#f44336"
+                                }}}>
+                                    {isDeleteLoading ? <CircularProgress size={16} sx={{ color: "#ffffff"}}/> : "Delete"}
                                 </Button>
                                 <Button onClick={handleClose} sx={{ backgroundColor: "#757575", color: "#ffffff", "&:hover": {
                                     backgroundColor: "#616161"
