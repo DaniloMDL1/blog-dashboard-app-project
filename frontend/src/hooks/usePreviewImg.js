@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "react-toastify"
 
 const usePreviewImg = () => {
     const [previewImg, setPreviewImg] = useState(null)
@@ -17,6 +18,7 @@ const usePreviewImg = () => {
             reader.readAsDataURL(file)
         } else {
             setErrorMsg("You must select an image file.")
+            toast.error("You must select an image file.")
             setPreviewImg(null)
         }
     }
@@ -24,7 +26,8 @@ const usePreviewImg = () => {
     return {
         previewImg,
         handlePreviewImgChange,
-        errorMsg
+        errorMsg,
+        setPreviewImg
     }
 }
 

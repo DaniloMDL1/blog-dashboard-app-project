@@ -4,6 +4,7 @@ import { Box, Button, CircularProgress, IconButton, Modal, Stack, Typography } f
 import { DataGrid } from "@mui/x-data-grid"
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from "@emotion/react"
+import { toast } from "react-toastify"
 
 const DashboardUsers = () => {
   const theme = useTheme()
@@ -46,6 +47,8 @@ const DashboardUsers = () => {
       const filterUser = users.filter((user) => user._id !== userId)
       setUsers(filterUser)
       handleClose()
+      toast.success("User has been deleted successfully.")
+
     } catch(error) {
       console.error("Error" + error.message)
     } finally {
@@ -57,27 +60,27 @@ const DashboardUsers = () => {
     {
       field: "_id",
       headerName: "ID",
-      flex: 1
+      width: 210
     }, 
     {
       field: "fullName",
       headerName: "Full Name", 
-      flex: 1
+      width: 200
     },
     {
       field: "username",
       headerName: "Username", 
-      flex: 1
+      width: 200
     },
     {
       field: "email",
       headerName: "Email Address", 
-      flex: 1
+      width: 240
     },
     {
       field: "deleteUser",
       headerName: "Delete",
-      flex: 0.4,
+      width: 80,
       renderCell: (params) => {
         return (
           <>
@@ -117,7 +120,7 @@ const DashboardUsers = () => {
   ]
 
   return (
-    <Box width={{ sm: "860px", xs: "200px" }} height={"400px"}>
+    <Box width={{ xs: "300px", sm: "600px", lg: "940px"}} height={"370px"}>
       <DataGrid 
         loading={isLoading}
         rows={users}
