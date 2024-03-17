@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    user: null,
-    mode: "light"
+    user: localStorage.getItem("user-info") ? JSON.parse(localStorage.getItem("user-info")) : null,
+    mode: localStorage.getItem("theme") || "light"
 }
 
 export const userSlice = createSlice({
@@ -11,25 +11,32 @@ export const userSlice = createSlice({
     reducers: {
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light"
+            localStorage.setItem("theme", state.mode)
         },
-        setSignUpUser: (state, action) => {
-            state.user = action.payload.user
+        signUp: (state, action) => {
+            state.user = action.payload
+            localStorage.setItem("user-info", JSON.stringify(action.payload))
         },
-        setSignInUser: (state, action) => {
-            state.user = action.payload.user
-        },
-        signOutUser: (state) => {
+        signOut: (state) => {
             state.user = null
+            localStorage.removeItem("user-info")
+            localStorage.removeItem("theme")
+        },
+        signIn: (state, action) => {
+            state.user = action.payload
+            localStorage.setItem("user-info", JSON.stringify(action.payload))
         },
         updateUserProfile: (state, action) => {
-            state.user = action.payload.user
+            state.user = action.payload
+            localStorage.setItem("user-info", JSON.stringify(action.payload))
         },
-        deleteUser: (state) => {
+        deleteUserAccount: (state) => {
             state.user = null
+            localStorage.removeItem("user-info")
         }
     }
 })
 
-export const { setMode, setSignUpUser, setSignInUser, signOutUser, updateUserProfile, deleteUser } = userSlice.actions
+export const { setMode, signUp, signOut, signIn, updateUserProfile, deleteUserAccount } = userSlice.actions
 
 export default userSlice.reducer

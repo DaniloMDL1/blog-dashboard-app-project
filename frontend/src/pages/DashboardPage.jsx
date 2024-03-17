@@ -1,15 +1,17 @@
+import { useTheme } from "@emotion/react"
 import { BottomNavigation, BottomNavigationAction, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Stack, useMediaQuery } from "@mui/material"
 import PeopleIcon from '@mui/icons-material/People'
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
-import { useTheme } from "@emotion/react"
 import { useState } from "react"
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
 const DashboardPage = () => {
     const theme = useTheme()
-    const { pathname } = useLocation()
     const isNonMobileScreen = useMediaQuery("(min-width: 1050px)")
-    const navigate = useNavigate()
+
     const [value, setValue] = useState("/dashboard/users")
+
+    const { pathname } = useLocation()
+    const navigate = useNavigate()
 
     const handleValueChange = (value) => {
         navigate(value)
@@ -19,9 +21,9 @@ const DashboardPage = () => {
         <>
             {isNonMobileScreen ? (
                 <Box display={"flex"} flexDirection={"row"}>
-                    <Box width={{ sm: "180px"}}>
+                    <Box width={{ sm: "180px" }}>
                         <Stack height={"calc(100vh - 68px)"} sx={{ borderRight: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040" }}>
-                            <List sx={{ py: 0}}>
+                            <List sx={{ py: 0 }}>
                                 <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
                                     <ListItemButton selected={pathname === "/dashboard/users"} component={Link} to="/dashboard/users">
                                         <ListItemIcon>

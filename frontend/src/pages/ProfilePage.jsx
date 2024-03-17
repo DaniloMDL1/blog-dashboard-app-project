@@ -1,73 +1,101 @@
-import { Alert, Avatar, Box, Button, CircularProgress, FormControl, InputLabel, Modal, Stack, TextField, Typography } from "@mui/material"
+import { useTheme } from "@emotion/react"
+import { Avatar, Box, Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, TextField, Typography } from "@mui/material"
 import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import usePreviewImg from "../hooks/usePreviewImg"
+import { useDeleteUserAccountMutation, useUpdateUserProfileMutation } from "../redux/user/usersApi"
 import { toast } from "react-toastify"
-import axios from "axios"
-import { updateUserProfile } from "../redux/user/userSlice"
-import { useTheme } from "@emotion/react"
-import useDeleteUser from "../hooks/useDeleteUser"
-import useSignOut from "../hooks/useSignOut"
+import { deleteUserAccount, signOut, updateUserProfile } from "../redux/user/userSlice"
+import usePreviewImg from "../hooks/usePreviewImg"
+import { useSignoutMutation } from "../redux/user/authApi"
+import DeleteAccountModal from "../components/DeleteAccountModal"
 
 const ProfilePage = () => {
     const theme = useTheme()
-    const avatarRef = useRef(null)
-    const { user } = useSelector((state) => state.user)
+
+    const { mode, user } = useSelector((state) => state.user)
     const dispatch = useDispatch()
+
+    const [openDeleteModal, setOpenDeleteModal] = useState(false)
+
+    const handleOpen = () => setOpenDeleteModal(true);
+    const handleClose = () => setOpenDeleteModal(false);
+
     const [inputs, setInputs] = useState({
         fullName: user.fullName,
         username: user.username,
         email: user.email,
         password: ""
     })
-    const [isLoading, setIsLoading] = useState(false)
-    const { previewImg, handlePreviewImgChange, errorMsg } = usePreviewImg()
-    const { handleDeleteUser, isLoading: isDeleteLoading } = useDeleteUser()
-    const { handleSignOut } = useSignOut()
-    const [open, setOpen] = useState(false)
+    const profilePictureRef = useRef(null)
 
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const { handleImgChange, previewImg } = usePreviewImg()
+
+    // update user profile
+    const [ updateUserProfileApi, { isLoading } ] = useUpdateUserProfileMutation()
+
+    // signout user
+    const [ signOutApi ] = useSignoutMutation()
+
+    // delete user account
+    const [ deleteUserAccountApi, { isLoading: isDeleteUserAccountLoading } ] = useDeleteUserAccountMutation()
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault()
-        setIsLoading(true)
         try {
-            const res = await axios.put(`/api/users/update/profile/${user._id}`, {
-                ...inputs,
-                profilePicture: previewImg
-            }, { withCredentials: true })
+            const res = await updateUserProfileApi({ ...inputs, _id: user._id, profilePicture: previewImg }).unwrap()
 
-            dispatch(updateUserProfile({ user: res.data }))
-            toast.success("Profile has been updated successfully.")
+            dispatch(updateUserProfile({ ...res }))
+            toast.success("Profile has been successfully updated.")
             
         } catch(error) {
-            if(error.response && error.response.status === 400) {
-                const errorMsg = error.response.data.error
-                toast.error(errorMsg)
+            if(error.data) {
+                toast.error(error.data.error)
+                return
             } else {
-                toast.error("An error occured on the server.")
+                toast.error(error.message)
+                return
             }
-        } finally {
-            setIsLoading(false)
+        }
+    }
+
+    const handleSignOut = async () => {
+        try {
+            const res = await signOutApi().unwrap()
+
+            dispatch(signOut())
+            
+        } catch(error) {
+            console.error("Error" + error.message)
+        }
+    }
+
+    const handleDeleteUserAccount = async () => {
+        try {
+            const res = await deleteUserAccountApi({ _id: user._id }).unwrap()
+
+            dispatch(deleteUserAccount())
+            toast.success("Your account has been successfully deleted.")
+            
+        } catch(error) {
+            if(error.data) {
+                toast.error(error.data.error)
+                return
+            } else {
+                console.error("Error" + error.message)
+            }
         }
     }
 
     return (
         <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ minHeight: "calc(100vh - 68px)"}}>
-            <Stack onSubmit={handleUpdateProfile} component={"form"} width={{ xs: "300px", sm: "420px"}} sx={{ border: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040", borderRadius: "8px", p: 3}}>
+            <Stack onSubmit={handleUpdateProfile} component={"form"} width={{ xs: "300px", sm: "420px"}} sx={{ border: "1px solid", borderColor: mode === "light" ? "#d4d4d8" : "#404040", borderRadius: "8px", p: 3}}>
                 <Typography variant="h6" mb={"14px"}>Update Profile</Typography>
-                {errorMsg && (
-                    <Alert severity="error" sx={{ mb: 2 }}>
-                        {errorMsg}
-                    </Alert>
-                )}
                 <Stack flexDirection={"row"} alignItems={"center"} gap={4}>
                     <Avatar src={previewImg || user.profilePicture} sx={{ width: 64, height: 64 }}/>
-                    <input type="file" hidden ref={avatarRef} onChange={handlePreviewImgChange}/>
-                    <Button onClick={() => avatarRef.current.click()} variant="contained">Change Avatar</Button>
+                    <input type="file" hidden ref={profilePictureRef} onChange={handleImgChange}/>
+                    <Button onClick={() => profilePictureRef.current.click()} variant="contained">Change Avatar</Button>
                 </Stack>
-                <FormControl >
+                <FormControl>
                     <InputLabel sx={{ mx: "-10px"}}>Full Name</InputLabel>
                     <TextField 
                         type="text"
@@ -115,45 +143,18 @@ const ProfilePage = () => {
                         onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
                 </FormControl>
-                <Button type="submit" sx={{ fontSize: "15px", mt: "18px", "&.Mui-disabled": {
-                    backgroundColor: theme.palette.primary.main
-                }, height: "40px"}} disabled={isLoading} variant="contained">
+                <Button variant="contained" type="submit" disabled={isLoading} sx={{ fontSize: "15px", mt: "18px", "&.Mui-disabled": { backgroundColor: theme.palette.primary.main }, height: "40px"}}>
                     {isLoading ? <CircularProgress size={24} sx={{ color: "#ffffff"}}/> : "Update Profile"}
                 </Button>
                 <Stack flexDirection={"row"} justifyContent={"space-between"} px={1}>
                     <Box onClick={handleOpen} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
                         Delete Account
                     </Box>
+                    <DeleteAccountModal open={openDeleteModal} handleClose={handleClose} handleDeleteUserAccount={handleDeleteUserAccount} isLoading={isDeleteUserAccountLoading}/>
                     <Box onClick={handleSignOut} sx={{ color: "#d32f2f", cursor: "pointer", mt: "12px"}}>
                         Sign Out
                     </Box>
                 </Stack>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: {xs: "260px", sm: "460px", height: "140px", backgroundColor: theme.palette.background.default, border: "none" }}}>
-                        <Box sx={{ p: 3}}>
-                            <Typography sx={{ fontSize: { xs: "14px", sm: "18px"}}}>
-                                Are you sure you want to delete your account?
-                            </Typography>
-                            <Stack flexDirection={"row"} mt={3} alignItems={"center"} gap={3} justifyContent={"flex-end"}>
-                                <Button onClick={() => handleDeleteUser(user._id)} disabled={isDeleteLoading} variant="contained" sx={{ backgroundColor: "#f44336", color: "#ffffff", "&:hover": {
-                                    backgroundColor: "#d32f2f"
-                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px", height: "37px", "&.Mui-disabled": {
-                                    backgroundColor: "#f44336"
-                                }}}>
-                                    {isDeleteLoading ? <CircularProgress size={16} sx={{ color: "#ffffff"}}/> : "Delete"}
-                                </Button>
-                                <Button onClick={handleClose} sx={{ backgroundColor: "#757575", color: "#ffffff", "&:hover": {
-                                    backgroundColor: "#616161"
-                                }, fontSize: {xs: "13px", sm: "15px"}, width: "80px"}}>
-                                    Cancel
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Box>
-                </Modal>
             </Stack>
         </Box>
     )

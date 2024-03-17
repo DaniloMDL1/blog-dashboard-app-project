@@ -3,9 +3,8 @@ import { toast } from "react-toastify"
 
 const usePreviewImg = () => {
     const [previewImg, setPreviewImg] = useState(null)
-    const [errorMsg, setErrorMsg] = useState(null)
 
-    const handlePreviewImgChange = (e) => {
+    const handleImgChange = (e) => {
         const file = e.target.files[0]
 
         if(file && file.type.startsWith("image/")) {
@@ -17,16 +16,14 @@ const usePreviewImg = () => {
 
             reader.readAsDataURL(file)
         } else {
-            setErrorMsg("You must select an image file.")
             toast.error("You must select an image file.")
             setPreviewImg(null)
         }
     }
 
     return {
+        handleImgChange,
         previewImg,
-        handlePreviewImgChange,
-        errorMsg,
         setPreviewImg
     }
 }

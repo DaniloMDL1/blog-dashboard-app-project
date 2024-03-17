@@ -16,12 +16,15 @@ export const createPost = async (req, res) => {
             postPicture = uploadedResponse.secure_url
         }
 
+        const slug = title.split(" ").join("-").toLowerCase().replace(/[^a-zA-Z0-9-]/g, "-")
+
         const newPost = new Post({
             title,
             desc,
             category,
             postPicture,
-            userId
+            userId,
+            slug
         })
         const savedPost = await newPost.save()
         res.status(201).json(savedPost)
@@ -105,9 +108,9 @@ export const getAllPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
     try {
-        const { postId } = req.params
+        const { slug } = req.params
 
-        const post = await Post.findById(postId)
+        const post = await Post.findOne({ slug })
         if(!post) return res.status(404).json({ error: "Post not found." })
 
         res.status(200).json(post)

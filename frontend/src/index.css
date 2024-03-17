@@ -1,1 +1,10 @@
+.ql-editor{
+    height: 220px;
+}
 
+.ql-toolbar.ql-snow{
+    border: 1px solid #5a5959;
+}
+.ql-container.ql-snow{
+    border: 1px solid #5a5959;
+}

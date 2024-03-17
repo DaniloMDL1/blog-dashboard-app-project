@@ -4,13 +4,15 @@ import SignUpPage from "./pages/SignUpPage"
 import SignInPage from "./pages/SignInPage"
 import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
-import CssBaseline from '@mui/material/CssBaseline'
+import CreatePostPage from "./pages/CreatePostPage"
+import PostPage from "./pages/PostPage"
+import DashboardUsers from "./components/DashboardUsers"
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
-import { useSelector } from "react-redux"
+import CssBaseline from '@mui/material/CssBaseline'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import DashboardUsers from "./components/DashboardUsers"
+import { useSelector } from "react-redux"
 
 const App = () => {
   const { mode, user } = useSelector((state) => state.user)
@@ -28,8 +30,10 @@ const App = () => {
         <Routes>
           <Route element={<HeaderLayout />}>
             <Route path="/" element={<HomePage />}/>
-            <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
-            <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
+            <Route path="/create-post" element={user ? <CreatePostPage /> : <Navigate to={"/signin"}/>}/>
+            <Route path="/post/:slug" element={<PostPage />}/>
+            <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
+            <Route path="/dashboard" element={user.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
               <Route path="users" element={<DashboardUsers />}/>
             </Route>
             <Route path="/signup" element={<SignUpPage />}/>

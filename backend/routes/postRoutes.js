@@ -5,7 +5,7 @@ import protectRoute from "../middlewares/protectRoute.js"
 const router = express.Router()
 
 router.get("/all", getAllPosts)
-router.get("/:postId", getPost)
+router.get("/:slug", getPost)
 router.get("/user/:userId", getUserPosts)
 router.get("/category/posts", getPostsByCategory)
 router.post("/create", protectRoute, createPost)
