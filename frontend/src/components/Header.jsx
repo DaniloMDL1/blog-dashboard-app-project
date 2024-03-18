@@ -95,6 +95,7 @@ const Header = () => {
                                 }}
                             >
                                 <MenuItem component={RouterLink} to={`/profile/${user.username}`}>Profile</MenuItem>
+                                <MenuItem component={RouterLink} to={"/your-posts"}>Your Posts</MenuItem>
                                 {user.isAdmin && (
                                     <MenuItem component={RouterLink} to={`/dashboard/users`}>Dashboard</MenuItem>
                                 )}

@@ -14,9 +14,17 @@ export const postsApi = api.injectEndpoints({
             query: (slug) => ({
                 url: `${POSTS_URL}/${slug}`,
                 method: "GET",
-            })
+            }),
+            providesTags: ["Posts"]
+        }),
+        getUserPosts: builder.query({
+            query: ({ userId }) => ({
+                url: `${POSTS_URL}/user/${userId}`,
+                method: "GET"
+            }),
+            providesTags: ["Posts"]
         })
     })
 })
 
-export const { useCreatePostMutation, useGetPostQuery } = postsApi
+export const { useCreatePostMutation, useGetPostQuery, useGetUserPostsQuery } = postsApi

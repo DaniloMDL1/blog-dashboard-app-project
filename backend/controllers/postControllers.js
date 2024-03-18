@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
         const { title, desc, category, userId } = req.body
         let { postPicture } = req.body
 
-        if(!title || !desc || !category) return res.status(400).json({ error: "Title, desc and category are required when creating a post." })
+        if(!title || !desc || !category || !postPicture) return res.status(400).json({ error: "Title, desc, category and picture are required when creating a post." })
 
         if(loggedInUserId.toString() !== userId) return res.status(403).json({ error: "User is not allowed to create a post." })
 
@@ -124,10 +124,14 @@ export const getPost = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params
+        const page = parseInt(req.query.page) || 0
+        const pageSize = parseInt(req.query.pageSize) || 20
 
-        const posts = await Post.find({ userId })
+        const posts = await Post.find({ userId }).skip(page * pageSize).limit(pageSize)
 
-        res.status(200).json(posts)
+        const totalPosts = await Post.countDocuments({ userId })
+
+        res.status(200).json({ posts, totalPosts })
         
     } catch(error) {
         console.log(error)

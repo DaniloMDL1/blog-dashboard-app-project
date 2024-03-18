@@ -10,7 +10,7 @@ const PostPage = () => {
     const { data, isLoading } = useGetPostQuery(slug)
 
     // get user
-    const { data: userData } = useGetUserQuery({ userId: data?.userId})
+    const { data: userData } = useGetUserQuery({ userId: data?.userId}, { skip: !data?.userId})
 
     return (
         <>

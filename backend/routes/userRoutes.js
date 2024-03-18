@@ -4,8 +4,8 @@ import protectRoute from "../middlewares/protectRoute.js"
 
 const router = express.Router()
 
-router.get("/:userId", protectRoute, getUser)
 router.get("/all", protectRoute, getAllUsers)
+router.get("/:userId", protectRoute, getUser)
 router.put("/update/profile/:userId", protectRoute, updateUserProfile)
 router.delete("/delete/:userId", protectRoute, deleteUser)
 

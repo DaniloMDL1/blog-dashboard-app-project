@@ -33,7 +33,6 @@ const CreatePostPage = () => {
         try {
             const res = await createPostApi({ ...inputs, userId: user._id, postPicture: previewImg }).unwrap()
 
-            console.log({ ...res })
             toast.success("Post is created successfully.")
             setInputs({
                 title: "",

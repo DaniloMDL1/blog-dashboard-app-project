@@ -18,7 +18,7 @@ const DashboardUsers = () => {
     const handleClose = () => setOpenDeleteModal(null)
 
     // get all users
-    const { data, isLoading, refetch } = useGetAllUsersQuery(paginationModel)
+    const { data, isLoading } = useGetAllUsersQuery(paginationModel)
 
     // delete user
     const [ deleteUserApi, { isLoading: isDeleteUserLoading } ] = useDeleteUserAccountMutation()
@@ -35,7 +35,6 @@ const DashboardUsers = () => {
             
             handleClose()
             toast.success("User has been deleted successfully.")
-            refetch()
             
         } catch(error) {
             if(error.data) {

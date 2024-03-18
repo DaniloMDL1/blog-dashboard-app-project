@@ -6,6 +6,8 @@ import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
 import CreatePostPage from "./pages/CreatePostPage"
 import PostPage from "./pages/PostPage"
+import UpdatePostPage from "./pages/UpdatePostPage"
+import YourPostsPage from "./pages/YourPostsPage"
 import DashboardUsers from "./components/DashboardUsers"
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
@@ -30,10 +32,12 @@ const App = () => {
         <Routes>
           <Route element={<HeaderLayout />}>
             <Route path="/" element={<HomePage />}/>
+            <Route path="/your-posts" element={user ? <YourPostsPage /> : <Navigate to={"/signin"}/>}/>
+            <Route path="/update-post/:postId" element={user ? <UpdatePostPage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/create-post" element={user ? <CreatePostPage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/post/:slug" element={<PostPage />}/>
             <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
-            <Route path="/dashboard" element={user.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
+            <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
               <Route path="users" element={<DashboardUsers />}/>
             </Route>
             <Route path="/signup" element={<SignUpPage />}/>
