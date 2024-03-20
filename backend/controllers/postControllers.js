@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import Post from "../models/postModel.js"
+import mongoose from "mongoose"
 
 export const createPost = async (req, res) => {
     try {
@@ -79,6 +80,11 @@ export const updatePost = async (req, res) => {
             postPicture = uploadedResponse.secure_url
         }
 
+        if(title) {
+            const slug = title.split(" ").join("-").toLowerCase().replace(/[^a-zA-Z0-9-]/g, "-")
+            post.slug = slug
+        }
+
         post.title = title || post.title
         post.desc = desc || post.desc
         post.category = category || post.category
@@ -108,10 +114,17 @@ export const getAllPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
     try {
-        const { slug } = req.params
+        const { query } = req.params
 
-        const post = await Post.findOne({ slug })
-        if(!post) return res.status(404).json({ error: "Post not found." })
+        let post
+
+        if(mongoose.Types.ObjectId.isValid(query)) {
+            post = await Post.findOne({ _id: query })
+        } else {
+            post = await Post.findOne({ slug: query })
+        }
+
+        if(!post) return res.status(404).json({ error: "Post not found."})
 
         res.status(200).json(post)
         
