@@ -9,6 +9,7 @@ import PostPage from "./pages/PostPage"
 import UpdatePostPage from "./pages/UpdatePostPage"
 import YourPostsPage from "./pages/YourPostsPage"
 import DashboardUsers from "./components/DashboardUsers"
+import DashboardPosts from "./components/DashboardPosts"
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
 import CssBaseline from '@mui/material/CssBaseline'
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
               <Route path="users" element={<DashboardUsers />}/>
+              <Route path="posts" element={<DashboardPosts />}/>
             </Route>
             <Route path="/signup" element={<SignUpPage />}/>
             <Route path="/signin" element={<SignInPage />}/>

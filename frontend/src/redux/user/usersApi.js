@@ -16,7 +16,7 @@ export const usersApi = api.injectEndpoints({
                 url: `${USERS_URL}/delete/${data && data._id}`,
                 method: "DELETE"
             }),
-            invalidatesTags: ["User"]
+            invalidatesTags: ["User", "Posts"]
         }),
         getAllUsers: builder.query({
             query: ({ page, pageSize }) => ({

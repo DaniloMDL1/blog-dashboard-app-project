@@ -45,7 +45,7 @@ export const deletePost = async (req, res) => {
         const post = await Post.findById(postId)
         if(!post) return res.status(404).json({ error: "Post not found." })
 
-        if(!loggedInUserIsAdmin && loggedInUserId.toString() !== post.userId) return res.status(403).json({ error: "User is not allowed to delete the post." })
+        if(!loggedInUserIsAdmin && loggedInUserId.toString() !== post.userId.toString()) return res.status(403).json({ error: "User is not allowed to delete the post." })
 
         if(post.postPicture) {
             const postPictureId = post.postPicture.split("/").pop().split(".")[0]
@@ -73,7 +73,7 @@ export const updatePost = async (req, res) => {
         let post = await Post.findById(postId)
         if(!post) return res.status(404).json({ error: "Post not found." })
 
-        if(!loggedInUserIsAdmin && loggedInUserId.toString() !== post.userId) return res.status(403).json({ error: "User is not allowed to update the post." })
+        if(loggedInUserId.toString() !== post.userId.toString() && !loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to update the post." })
 
         if(postPicture) {
             const uploadedResponse = await cloudinary.uploader.upload(postPicture)
@@ -102,9 +102,15 @@ export const updatePost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find()
+        const page = parseInt(req.query.page) || 0
+        const pageSize = parseInt(req.query.pageSize) || 5
+        const skip = page * pageSize
 
-        res.status(200).json(posts)
+        const posts = await Post.find().skip(skip).limit(pageSize)
+
+        const totalPosts = await Post.countDocuments()
+
+        res.status(200).json({ posts, totalPosts })
         
     } catch(error) {
         console.log(error)
@@ -140,7 +146,7 @@ export const getUserPosts = async (req, res) => {
         const page = parseInt(req.query.page) || 0
         const pageSize = parseInt(req.query.pageSize) || 20
 
-        const posts = await Post.find({ userId }).skip(page * pageSize).limit(pageSize)
+        const posts = await Post.find({ userId }).skip((page - 1) * pageSize).limit(pageSize)
 
         const totalPosts = await Post.countDocuments({ userId })
 

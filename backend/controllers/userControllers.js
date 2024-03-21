@@ -1,6 +1,7 @@
 import User from "../models/userModel.js"
 import bcrypt from "bcryptjs"
 import { v2 as cloudinary } from "cloudinary"
+import Post from "../models/postModel.js"
 
 export const updateUserProfile = async (req, res) => {
     try {
@@ -67,6 +68,7 @@ export const deleteUser = async (req, res) => {
             await cloudinary.uploader.destroy(userProfilePictureId)
         }
 
+        await Post.deleteMany({ userId: userId })
         await User.findByIdAndDelete(userId)
 
         res.status(200).json({ msg: "User is successfully deleted." })

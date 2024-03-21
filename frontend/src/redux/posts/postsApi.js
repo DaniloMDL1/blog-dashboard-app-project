@@ -8,7 +8,8 @@ export const postsApi = api.injectEndpoints({
                 url: `${POSTS_URL}/create`,
                 method: "POST",
                 body: data
-            })
+            }),
+            invalidatesTags: ["Posts"]
         }),
         getPost: builder.query({
             query: (slug, postId) => ({
@@ -18,9 +19,10 @@ export const postsApi = api.injectEndpoints({
             providesTags: ["Posts"]
         }),
         getUserPosts: builder.query({
-            query: ({ userId }) => ({
+            query: ({ userId, page }) => ({
                 url: `${POSTS_URL}/user/${userId}`,
-                method: "GET"
+                method: "GET",
+                params: { page }
             }),
             providesTags: ["Posts"]
         }),
@@ -43,8 +45,16 @@ export const postsApi = api.injectEndpoints({
                 }
             }),
             invalidatesTags: ["Posts"]
+        }),
+        getAllPosts: builder.query({
+            query: ({ page, pageSize }) => ({
+                url: `${POSTS_URL}/all`,
+                method: "GET",
+                params: { page, pageSize }
+            }),
+            providesTags: ["Posts"]
         })
     })
 })
 
-export const { useCreatePostMutation, useGetPostQuery, useGetUserPostsQuery, useDeletePostMutation, useUpdatePostMutation } = postsApi
+export const { useCreatePostMutation, useGetPostQuery, useGetUserPostsQuery, useDeletePostMutation, useUpdatePostMutation, useGetAllPostsQuery } = postsApi

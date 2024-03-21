@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react"
 import { BottomNavigation, BottomNavigationAction, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Stack, useMediaQuery } from "@mui/material"
 import PeopleIcon from '@mui/icons-material/People'
+import DescriptionIcon from '@mui/icons-material/Description'
 import { useState } from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
@@ -13,8 +14,9 @@ const DashboardPage = () => {
     const { pathname } = useLocation()
     const navigate = useNavigate()
 
-    const handleValueChange = (value) => {
-        navigate(value)
+    const handleValueChange = (e, newValue) => {
+        setValue(newValue)
+        navigate(newValue)
     }
 
     return (
@@ -30,6 +32,14 @@ const DashboardPage = () => {
                                             <PeopleIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Users" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
+                                    <ListItemButton selected={pathname === "/dashboard/posts"} component={Link} to="/dashboard/posts">
+                                        <ListItemIcon>
+                                            <DescriptionIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Posts" />
                                     </ListItemButton>
                                 </ListItem>
                             </List>
@@ -54,6 +64,11 @@ const DashboardPage = () => {
                                 value={"/dashboard/users"}
                                 label="Users"
                                 icon={<PeopleIcon />}
+                            />
+                            <BottomNavigationAction 
+                                value={"/dashboard/posts"}
+                                label="Posts"
+                                icon={<DescriptionIcon />}
                             />
                         </BottomNavigation>
                     </Paper>
