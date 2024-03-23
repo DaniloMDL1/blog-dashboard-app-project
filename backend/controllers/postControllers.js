@@ -106,7 +106,7 @@ export const getAllPosts = async (req, res) => {
         const pageSize = parseInt(req.query.pageSize) || 5
         const skip = page * pageSize
 
-        const posts = await Post.find().skip(skip).limit(pageSize)
+        const posts = await Post.find().skip(skip).limit(pageSize).sort({ createdAt: -1 })
 
         const totalPosts = await Post.countDocuments()
 
@@ -163,6 +163,39 @@ export const getPostsByCategory = async (req, res) => {
         const { category } = req.query
 
         const posts = await Post.find({ category })
+
+        res.status(200).json(posts)
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getRecentPosts = async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ createdAt: -1 }).limit(20)
+
+        res.status(200).json(posts)
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getSearchPosts = async (req, res) => {
+    try {
+        const { searchTerm } = req.query
+
+        const posts = await Post.find({ $or: [
+            {
+                title: { $regex: searchTerm, $options: "i" }
+            },
+            {
+                desc: { $regex: searchTerm, $options: "i" }
+            },
+        ]})
 
         res.status(200).json(posts)
         

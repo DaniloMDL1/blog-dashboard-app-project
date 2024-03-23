@@ -24,7 +24,7 @@ const YourPostsPage = () => {
     }
 
     return (
-        <Container maxWidth={"lg"} sx={{ mt: "40px"}}>
+        <Container maxWidth={"lg"} sx={{ mt: "40px", mb: "10px"}}>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center"}}>
                     <CircularProgress size={24}/>

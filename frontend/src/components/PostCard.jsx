@@ -9,7 +9,7 @@ const PostCard = ({ post }) => {
     if(!userData) return null
 
     return (
-        <Card sx={{ maxWidth: "440px"}}>
+        <Card sx={{ maxWidth: "440px"}} elevation={2}>
             <CardHeader 
                 avatar={<Avatar src={userData.profilePicture} sx={{ width: 38, height: 38}}/>}
                 title={userData.username}

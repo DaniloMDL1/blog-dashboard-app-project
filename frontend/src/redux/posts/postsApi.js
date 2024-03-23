@@ -53,8 +53,21 @@ export const postsApi = api.injectEndpoints({
                 params: { page, pageSize }
             }),
             providesTags: ["Posts"]
+        }),
+        getRecentPosts: builder.query({
+            query: () => ({
+                url: `${POSTS_URL}/recent`,
+                method: "GET"
+            })
+        }),
+        getSearchPosts: builder.query({
+            query: ({ searchTerm }) => ({
+                url: `${POSTS_URL}/search`,
+                method: "GET",
+                params: { searchTerm }
+            })
         })
     })
 })
 
-export const { useCreatePostMutation, useGetPostQuery, useGetUserPostsQuery, useDeletePostMutation, useUpdatePostMutation, useGetAllPostsQuery } = postsApi
+export const { useCreatePostMutation, useGetPostQuery, useGetUserPostsQuery, useDeletePostMutation, useUpdatePostMutation, useGetAllPostsQuery, useGetRecentPostsQuery, useGetSearchPostsQuery } = postsApi

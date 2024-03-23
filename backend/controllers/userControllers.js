@@ -89,7 +89,7 @@ export const getAllUsers = async (req, res) => {
 
         if(!loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to get all users." })
 
-        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password").skip(skip).limit(pageSize)
+        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password").skip(skip).limit(pageSize).sort({ createdAt: -1 })
 
         const totalUsers = await User.countDocuments({ _id : { $ne: loggedInUserId }})
 
