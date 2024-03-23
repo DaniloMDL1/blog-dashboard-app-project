@@ -65,6 +65,7 @@ const Header = () => {
                                     <SearchIcon />
                                 </IconButton>
                             </Tooltip>
+                            <SearchInputModal open={openSearchModal} handleClose={handleCloseSearchModal}/>
                             <Link component={RouterLink} to={"/signup"} variant="body1">
                                 Sign Up
                             </Link>

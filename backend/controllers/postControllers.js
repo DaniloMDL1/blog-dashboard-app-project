@@ -127,7 +127,7 @@ export const getPost = async (req, res) => {
         if(mongoose.Types.ObjectId.isValid(query)) {
             post = await Post.findOne({ _id: query })
         } else {
-            post = await Post.findOne({ slug: query })
+            post = await Post.findOneAndUpdate({ slug: query }, { $inc: { views: 1 }}, { new: true })
         }
 
         if(!post) return res.status(404).json({ error: "Post not found."})
@@ -187,6 +187,9 @@ export const getRecentPosts = async (req, res) => {
 export const getSearchPosts = async (req, res) => {
     try {
         const { searchTerm } = req.query
+        const page = parseInt(req.query.page) || 0
+        const pageSize = parseInt(req.query.pageSize) || 8
+        let totalPosts
 
         const posts = await Post.find({ $or: [
             {
@@ -195,7 +198,32 @@ export const getSearchPosts = async (req, res) => {
             {
                 desc: { $regex: searchTerm, $options: "i" }
             },
-        ]})
+        ]}).skip((page - 1) * pageSize).limit(pageSize)
+
+        if(searchTerm) {
+            totalPosts = await Post.countDocuments({ $or: [
+                {
+                    title: { $regex: searchTerm, $options: "i" }
+                },
+                {
+                    desc: { $regex: searchTerm, $options: "i" }
+                },
+            ]})
+        } else {
+            totalPosts = await Post.countDocuments()
+        }
+
+        res.status(200).json({ posts, totalPosts })
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getPopularPosts = async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ views: -1 }).limit(8)
 
         res.status(200).json(posts)
         

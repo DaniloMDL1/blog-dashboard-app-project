@@ -40,7 +40,10 @@ const SearchInputModal = ({ open, handleClose }) => {
                         placeholder="Search posts"
                         endAdornment={
                             <InputAdornment position="end">
-                                <IconButton sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
+                                <IconButton onClick={() => {
+                                    navigate("/search")
+                                    handleClose()
+                                }} sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
