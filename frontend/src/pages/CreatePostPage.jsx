@@ -82,7 +82,7 @@ const CreatePostPage = () => {
                         onChange={(e) => setInputs({ ...inputs, category: e.target.value })}
                     >
                         {categories.map((c) => (
-                            <MenuItem key={c.name} value={c.name}>
+                            <MenuItem key={c.name} value={c.urlName}>
                                 {c.name}
                             </MenuItem>
                         ))}

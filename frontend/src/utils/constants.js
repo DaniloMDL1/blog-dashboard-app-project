@@ -1,41 +1,54 @@
 export const categories = [
     {
-        name: "Wallpapers"
+        name: "Wallpapers",
+        urlName: "wallpapers"
     },
     {
-        name: "Nature"
+        name: "Nature",
+        urlName: "nature"
     },
     {
-        name: "3D Renders"
+        name: "3D Renders",
+        urlName: "3d-renders"
     },
     {
-        name: "Travel"
+        name: "Travel",
+        urlName: "travel"
     },
     {
-        name: "Architecture & Interiors"
+        name: "Architecture & Interiors",
+        urlName: "architecture-interiors"
     },
     {
-        name: "Animals"
+        name: "Animals",
+        urlName: "animals"
     },
     {
-        name: "Fashion & Beauty"
+        name: "Fashion & Beauty",
+        urlName: "fashion-beauty"
     },
     {
-        name: "People"
+        name: "People",
+        urlName: "people"
     },
     {
-        name: "Sports"
+        name: "Sports",
+        urlName: "sports"
     },
     {
-        name: "Business & Work"
+        name: "Business & Work",
+        urlName: "business-work"
     },
     {
-        name: "Food & Drink"
+        name: "Food & Drink",
+        urlName: "food-drink"
     },
     {
-        name: "Health & Wellness"
+        name: "Health & Wellness",
+        urlName: "health-wellness"
     },
     {
-        name: "Technology"
+        name: "Technology",
+        urlName: "technology"
     },
 ]

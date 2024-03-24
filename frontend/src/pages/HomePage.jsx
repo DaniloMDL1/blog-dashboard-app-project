@@ -17,16 +17,6 @@ const HomePage = () => {
             <CircularProgress size={24}/>
         </Box>
       )}
-      {!isRecentPostsLoading && recentPostData.length === 0 && (
-        <Typography variant="h5" textAlign={"center"}>
-          There is no recent posts yet.
-        </Typography>
-      )}
-      {!isPopularPostsLoading && popularPostData.length === 0 && (
-        <Typography variant="h5" textAlign={"center"}>
-          There is no popular posts yet.
-        </Typography>
-      )}
       {recentPostData && (
         <>
           <Typography variant="h5" sx={{ mb: "20px", pl: "10px"}}>
@@ -41,6 +31,11 @@ const HomePage = () => {
           </Grid>
         </>
       )}
+      {!isRecentPostsLoading && recentPostData.length === 0 && (
+        <Typography variant="h5" textAlign={"center"}>
+          There is no recent posts yet.
+        </Typography>
+      )}
       {popularPostData && (
         <>
           <Typography variant="h5" sx={{ mb: "20px", pl: "10px", mt: "50px"}}>
@@ -54,6 +49,11 @@ const HomePage = () => {
             ))}
           </Grid>
         </>
+      )}
+      {!isPopularPostsLoading && popularPostData.length === 0 && (
+        <Typography variant="h5" textAlign={"center"}>
+          There is no popular posts yet.
+        </Typography>
       )}
     </Container>
   )

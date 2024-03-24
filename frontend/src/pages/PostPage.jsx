@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { useState } from "react"
 import DeletePostModal from "../components/DeletePostModal"
 import { toast } from "react-toastify"
+import formatCategory from "../utils/formatCategory"
 
 const PostPage = () => {
     const { user } = useSelector((state) => state.user)
@@ -100,7 +101,7 @@ const PostPage = () => {
                         <Stack flexDirection={"row"} alignItems={"center"} gap={2} sx={{ mt: "20px", px: 1}}>
                             <Typography>Category:</Typography>
                             <Box sx={{ backgroundColor: "#311b92", p: 1, borderRadius: "9999px", color: "#ffffff"}}>
-                                {data.category}
+                                {formatCategory(data.category)}
                             </Box>
                         </Stack>
                         <Typography sx={{ px: "8px", mt: "20px"}}>

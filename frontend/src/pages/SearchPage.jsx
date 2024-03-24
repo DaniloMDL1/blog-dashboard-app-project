@@ -20,8 +20,9 @@ const SearchPage = () => {
     const [page, setPage] = useState(1)
 
     useEffect(() => {
-        const searchParamsSearchTerm = searchParams.get("searchTerm")
+        const searchParamsSearchTerm = searchParams.get("searchTerm")?.replace(/-/g, " ")
         const searchParamsCategory = searchParams.get("category")
+
         if(searchParamsSearchTerm) {
             setSearchTerm(searchParamsSearchTerm)
         }
@@ -31,11 +32,12 @@ const SearchPage = () => {
         }
     }, [search, setSearchTerm, setCategory])
 
-    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm") || "", page, category: searchParams.get("category") || "" })
+    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm")?.replace(/-/g, " ") || "", page, category: searchParams.get("category") || "" })
 
-    const handleFilter = () => {
+    const handleFilter = (e) => {
+        e.preventDefault()
         if(searchTerm.trim()) {
-            navigate(`/search?searchTerm=${searchTerm}${category ? `&category=${category}` : ""}`)
+            navigate(`/search?searchTerm=${searchTerm.replace(/\s+/g, "-")}${category ? `&category=${category}` : ""}`)
         } else {
             navigate(`/search${category ? `?category=${category}` : ""}`)
         }
@@ -46,7 +48,7 @@ const SearchPage = () => {
 
         searchParams.set("page", page)
 
-        const searchParamsSearchTerm = searchParams.get("searchTerm")
+        const searchParamsSearchTerm = searchParams.get("searchTerm")?.replace(/\s+/g, "-")
         const searchParamsCategory = searchParams.get("category")
 
         if(searchParamsSearchTerm) {
@@ -58,7 +60,7 @@ const SearchPage = () => {
 
     return (
         <Container maxWidth={"lg"} sx={{ mt: "40px", mb: "20px"}}>
-            <Stack flexDirection={"row"} alignItems={"center"} gap={1} flexWrap={"wrap"} mb={"40px"}>
+            <Stack onSubmit={handleFilter} component={"form"} flexDirection={"row"} alignItems={"center"} gap={1} flexWrap={"wrap"} mb={"40px"}>
                 <FormControl size="small" sx={{ width: "240px"}}>
                     <OutlinedInput 
                         type="text"
@@ -104,16 +106,23 @@ const SearchPage = () => {
                         onChange={(e) => setCategory(e.target.value)}
                     >
                         {categories.map((c) => (
-                            <MenuItem key={c.name} value={c.name}>
+                            <MenuItem key={c.name} value={c.urlName}>
                                 {c.name}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
-                <Button onClick={handleFilter} variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, "&:hover": {
+                <Button type="submit" variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, "&:hover": {
                     backgroundColor: theme.palette.secondary.dark
                 } }}>
                     Filter
+                </Button>
+                <Button onClick={() => {
+                    navigate("/search")
+                    setSearchTerm("")
+                    setCategory("")
+                }} type="button" variant="contained">
+                    Clear Filters
                 </Button>
             </Stack>
             {isSearchPostLoading && (

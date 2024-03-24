@@ -22,7 +22,7 @@ const SearchInputModal = ({ open, handleClose }) => {
 
         const searchParams = new URLSearchParams(search)
         searchParams.set("searchTerm", searchTerm)
-        navigate(`/search?searchTerm=${searchTerm}`)
+        navigate(`/search?searchTerm=${searchTerm.replace(/\s+/g, "-")}`)
         setSearchTerm("")
         handleClose()
     }
