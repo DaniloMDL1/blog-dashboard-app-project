@@ -21,18 +21,23 @@ const SearchPage = () => {
 
     useEffect(() => {
         const searchParamsSearchTerm = searchParams.get("searchTerm")
+        const searchParamsCategory = searchParams.get("category")
         if(searchParamsSearchTerm) {
             setSearchTerm(searchParamsSearchTerm)
         }
-    }, [search, setSearchTerm])
 
-    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm") || "", page })
+        if(searchParamsCategory) {
+            setCategory(searchParamsCategory)
+        }
+    }, [search, setSearchTerm, setCategory])
+
+    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm") || "", page, category: searchParams.get("category") || "" })
 
     const handleFilter = () => {
         if(searchTerm.trim()) {
-            navigate(`/search?searchTerm=${searchTerm}`)
+            navigate(`/search?searchTerm=${searchTerm}${category ? `&category=${category}` : ""}`)
         } else {
-            navigate("/search")
+            navigate(`/search${category ? `?category=${category}` : ""}`)
         }
     }
 
@@ -42,10 +47,12 @@ const SearchPage = () => {
         searchParams.set("page", page)
 
         const searchParamsSearchTerm = searchParams.get("searchTerm")
+        const searchParamsCategory = searchParams.get("category")
+
         if(searchParamsSearchTerm) {
-            navigate(`/search?searchTerm=${searchParamsSearchTerm}&page=${page}`)
+            navigate(`/search?searchTerm=${searchParamsSearchTerm}${searchParamsCategory ? `&category=${searchParamsCategory}` : ""}&page=${page}`)
         } else {
-            navigate(`/search?page=${page}`)
+            navigate(`/search${searchParamsCategory ? `?category=${searchParamsCategory}&page=${page}` : `?page=${page}`}`)
         }
     }
 

@@ -62,10 +62,10 @@ export const postsApi = api.injectEndpoints({
             providesTags: ["Posts"]
         }),
         getSearchPosts: builder.query({
-            query: ({ searchTerm, page }) => ({
+            query: ({ searchTerm, page, category }) => ({
                 url: `${POSTS_URL}/search`,
                 method: "GET",
-                params: { searchTerm, page }
+                params: { searchTerm, page, category }
             }),
             providesTags: ["Posts"]
         }),

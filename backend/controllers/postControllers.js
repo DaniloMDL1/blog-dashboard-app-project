@@ -146,25 +146,11 @@ export const getUserPosts = async (req, res) => {
         const page = parseInt(req.query.page) || 0
         const pageSize = parseInt(req.query.pageSize) || 20
 
-        const posts = await Post.find({ userId }).skip((page - 1) * pageSize).limit(pageSize)
+        const posts = await Post.find({ userId }).skip((page - 1) * pageSize).limit(pageSize).sort({ createdAt: -1 })
 
         const totalPosts = await Post.countDocuments({ userId })
 
         res.status(200).json({ posts, totalPosts })
-        
-    } catch(error) {
-        console.log(error)
-        res.status(500).json({ error: error.message })
-    }
-}
-
-export const getPostsByCategory = async (req, res) => {
-    try {
-        const { category } = req.query
-
-        const posts = await Post.find({ category })
-
-        res.status(200).json(posts)
         
     } catch(error) {
         console.log(error)
@@ -186,31 +172,38 @@ export const getRecentPosts = async (req, res) => {
 
 export const getSearchPosts = async (req, res) => {
     try {
-        const { searchTerm } = req.query
         const page = parseInt(req.query.page) || 0
         const pageSize = parseInt(req.query.pageSize) || 8
         let totalPosts
 
-        const posts = await Post.find({ $or: [
-            {
-                title: { $regex: searchTerm, $options: "i" }
-            },
-            {
-                desc: { $regex: searchTerm, $options: "i" }
-            },
-        ]}).skip((page - 1) * pageSize).limit(pageSize)
+        const posts = await Post.find({ 
+            ...(req.query.searchTerm && {
+                $or: [
+                    {
+                        title: { $regex: req.query.searchTerm, $options: "i" }
+                    },
+                    {
+                        desc: { $regex: req.query.searchTerm, $options: "i" }
+                    },
+                ],
+            }),
+            ...(req.query.category && { category: req.query.category })
+        }).skip((page - 1) * pageSize).limit(pageSize)
 
-        if(searchTerm) {
-            totalPosts = await Post.countDocuments({ $or: [
-                {
-                    title: { $regex: searchTerm, $options: "i" }
-                },
-                {
-                    desc: { $regex: searchTerm, $options: "i" }
-                },
-            ]})
+        if(req.query.searchTerm) {
+            totalPosts = await Post.countDocuments({ 
+                $or: [
+                    {
+                        title: { $regex: req.query.searchTerm, $options: "i" }
+                    },
+                    {
+                        desc: { $regex: req.query.searchTerm, $options: "i" }
+                    },
+                ],
+                ...(req.query.category && { category: req.query.category })
+            })
         } else {
-            totalPosts = await Post.countDocuments()
+            totalPosts = await Post.countDocuments(req.query.category ? { category: req.query.category} : {})
         }
 
         res.status(200).json({ posts, totalPosts })

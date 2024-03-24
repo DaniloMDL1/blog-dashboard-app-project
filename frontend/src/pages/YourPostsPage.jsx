@@ -44,14 +44,16 @@ const YourPostsPage = () => {
                             </Grid>
                         ))}
                     </Grid>
-                    <Box sx={{ display: "flex", justifyContent: "center", mt: 4}}>
-                        <Pagination 
-                            count={Math.ceil(data.totalPosts / 20)}
-                            page={page}
-                            onChange={handlePageChange}
-                            size="large"
-                        />
-                    </Box>
+                    {data.totalPosts > 20 && (
+                        <Box sx={{ display: "flex", justifyContent: "center", mt: 4}}>
+                            <Pagination 
+                                count={Math.ceil(data.totalPosts / 20)}
+                                page={page}
+                                onChange={handlePageChange}
+                                size="large"
+                            />
+                        </Box>
+                    )}
                 </>
             )}
         </Container>
