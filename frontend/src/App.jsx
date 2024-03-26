@@ -40,9 +40,9 @@ const App = () => {
             <Route path="/create-post" element={user ? <CreatePostPage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/post/:slug" element={<PostPage />}/>
             <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
-            <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/"}/>}>
-              <Route path="users" element={user?.isAdmin ? <DashboardUsers /> : <Navigate to={"/"}/>}/>
-              <Route path="posts" element={user?.isAdmin ? <DashboardPosts /> : <Navigate to={"/"}/>}/>
+            <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/signin"}/>}>
+              <Route path="users" element={user?.isAdmin ? <DashboardUsers /> : <Navigate to={"/signin"}/>}/>
+              <Route path="posts" element={user?.isAdmin ? <DashboardPosts /> : <Navigate to={"/signin"}/>}/>
             </Route>
             <Route path="/signup" element={<SignUpPage />}/>
             <Route path="/signin" element={<SignInPage />}/>

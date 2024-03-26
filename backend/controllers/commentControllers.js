@@ -5,7 +5,7 @@ export const createComment = async (req, res) => {
         const loggedInUserId = req.user.userId
         const { comment, postId, userId } = req.body
 
-        if(!comment || !postId || !userId) return res.status(400).json({ error: "Comment, postId and userId are required." })
+        if(!comment || !postId || !userId) return res.status(400).json({ error: "Comment is required." })
 
         if(loggedInUserId.toString() !== userId) return res.status(403).json({ error: "User is not allowed to create a comment."})
 
@@ -75,6 +75,30 @@ export const getPostComments = async (req, res) => {
         const comments = await Comment.find({ postId })
 
         res.status(200).json(comments)
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const likeUnlikeComment = async (req, res) => {
+    try {
+        const { commentId } = req.params
+        const loggedInUserId = req.user.userId
+
+        const comment = await Comment.findById(commentId)
+        if(!comment) return res.status(404).json({ error: "Comment not found." })
+
+        const isLiked = comment.likes.includes(loggedInUserId)
+
+        if(isLiked) {
+            await Comment.findByIdAndUpdate(commentId, { $pull: { likes: loggedInUserId } }, { new: true })
+            return res.status(200).json({ msg: "Comment has been unliked."})
+        } else {
+            await Comment.findByIdAndUpdate(commentId, { $push: { likes: loggedInUserId } }, { new: true })
+            return res.status(200).json({ msg: "Comment has been liked."})
+        }
         
     } catch(error) {
         console.log(error)

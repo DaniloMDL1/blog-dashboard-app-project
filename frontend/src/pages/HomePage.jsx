@@ -31,7 +31,7 @@ const HomePage = () => {
           </Grid>
         </>
       )}
-      {!isRecentPostsLoading && recentPostData.length === 0 && (
+      {!isRecentPostsLoading && recentPostData?.length === 0 && (
         <Typography variant="h5" textAlign={"center"}>
           There is no recent posts yet.
         </Typography>
@@ -50,7 +50,7 @@ const HomePage = () => {
           </Grid>
         </>
       )}
-      {!isPopularPostsLoading && popularPostData.length === 0 && (
+      {!isPopularPostsLoading && popularPostData?.length === 0 && (
         <Typography variant="h5" textAlign={"center"}>
           There is no popular posts yet.
         </Typography>
