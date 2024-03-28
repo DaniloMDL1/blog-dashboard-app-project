@@ -27,6 +27,7 @@ const Comment = ({ comment }) => {
     // update comment
     const [updateCommentText, setUpdateCommentText] = useState(comment.comment)
     const [isEditing, setIsEditing] = useState(false)
+    const [isLikeUnlikeLoading, setIsLikeUnlikeLoading] = useState(false)
 
     const handleOpen = () => setOpenDeleteModal(true)
     const handleClose = () => setOpenDeleteModal(false)
@@ -59,6 +60,8 @@ const Comment = ({ comment }) => {
             toast.error("You are not authorized to like or unlike any comment.")
             return
         }
+        if(isLikeUnlikeLoading) return
+        setIsLikeUnlikeLoading(true)
         try {
             const res = await likeUnlikeCommentApi({ commentId: comment._id }).unwrap()
 
@@ -69,6 +72,7 @@ const Comment = ({ comment }) => {
             }
 
             setIsLiked(!isLiked)
+            setIsLikeUnlikeLoading(false)
             
         } catch(error) {
             if(error.data) {

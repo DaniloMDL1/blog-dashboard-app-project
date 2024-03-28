@@ -39,8 +39,16 @@ export const commentsApi = api.injectEndpoints({
                 body: { comment }
             }),
             invalidatesTags: ["Comments"]
+        }),
+        getAllComents: builder.query({
+            query: ({ page, pageSize }) => ({
+                url: `${COMMENTS_URL}/all`,
+                method: "GET",
+                params: { page, pageSize }
+            }),
+            providesTags: ["Comments"]
         })
     })
 })
 
-export const { useCreateCommentMutation, useGetPostCommentsQuery, useDeleteCommentMutation, useLikeUnlikeCommentMutation, useUpdateCommentMutation } = commentsApi
+export const { useCreateCommentMutation, useGetPostCommentsQuery, useDeleteCommentMutation, useLikeUnlikeCommentMutation, useUpdateCommentMutation, useGetAllComentsQuery } = commentsApi

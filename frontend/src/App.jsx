@@ -11,6 +11,7 @@ import YourPostsPage from "./pages/YourPostsPage"
 import SearchPage from "./pages/SearchPage"
 import DashboardUsers from "./components/DashboardUsers"
 import DashboardPosts from "./components/DashboardPosts"
+import DashboardComments from "./components/DashboardComments"
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
 import CssBaseline from '@mui/material/CssBaseline'
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/signin"}/>}>
               <Route path="users" element={user?.isAdmin ? <DashboardUsers /> : <Navigate to={"/signin"}/>}/>
               <Route path="posts" element={user?.isAdmin ? <DashboardPosts /> : <Navigate to={"/signin"}/>}/>
+              <Route path="comments" element={user?.isAdmin ? <DashboardComments /> : <Navigate to={"/signin"}/>}/>
             </Route>
             <Route path="/signup" element={<SignUpPage />}/>
             <Route path="/signin" element={<SignInPage />}/>

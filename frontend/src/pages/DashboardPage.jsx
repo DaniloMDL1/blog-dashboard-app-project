@@ -2,6 +2,7 @@ import { useTheme } from "@emotion/react"
 import { BottomNavigation, BottomNavigationAction, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Stack, useMediaQuery } from "@mui/material"
 import PeopleIcon from '@mui/icons-material/People'
 import DescriptionIcon from '@mui/icons-material/Description'
+import CommentIcon from '@mui/icons-material/Comment'
 import { useState } from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
@@ -42,6 +43,14 @@ const DashboardPage = () => {
                                         <ListItemText primary="Posts" />
                                     </ListItemButton>
                                 </ListItem>
+                                <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
+                                    <ListItemButton selected={pathname === "/dashboard/comments"} component={Link} to="/dashboard/comments">
+                                        <ListItemIcon>
+                                            <CommentIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Comments" />
+                                    </ListItemButton>
+                                </ListItem>
                             </List>
                         </Stack>
                     </Box>
@@ -69,6 +78,11 @@ const DashboardPage = () => {
                                 value={"/dashboard/posts"}
                                 label="Posts"
                                 icon={<DescriptionIcon />}
+                            />
+                            <BottomNavigationAction 
+                                value={"/dashboard/comments"}
+                                label="Comments"
+                                icon={<CommentIcon />}
                             />
                         </BottomNavigation>
                     </Paper>

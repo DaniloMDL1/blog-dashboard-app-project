@@ -72,7 +72,7 @@ export const getPostComments = async (req, res) => {
     try {
         const { postId } = req.params
 
-        const comments = await Comment.find({ postId })
+        const comments = await Comment.find({ postId }).sort({ createdAt: -1 })
 
         res.status(200).json(comments)
         
@@ -99,6 +99,23 @@ export const likeUnlikeComment = async (req, res) => {
             await Comment.findByIdAndUpdate(commentId, { $push: { likes: loggedInUserId } }, { new: true })
             return res.status(200).json({ msg: "Comment has been liked."})
         }
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getAllComments = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 0
+        const pageSize = parseInt(req.query.pageSize) || 20
+
+        const comments = await Comment.find().skip(page * pageSize).limit(pageSize).populate("postId")
+
+        const totalComments = await Comment.countDocuments()
+
+        res.status(200).json({ comments, totalComments })
         
     } catch(error) {
         console.log(error)

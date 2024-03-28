@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, Typography } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { DataGrid } from "@mui/x-data-grid"
@@ -7,6 +7,7 @@ import { useDeletePostMutation, useGetAllPostsQuery } from "../redux/posts/posts
 import DeletePostFromDataGridModal from "./DeletePostFromDataGridModal"
 import { toast } from "react-toastify"
 import { Link } from "react-router-dom"
+import formatCategory from "../utils/formatCategory"
 
 const DashboardPosts = () => {
   const [paginationModel, setPaginationModel] = useState({
@@ -66,7 +67,12 @@ const DashboardPosts = () => {
     {
       field: "category",
       headerName: "Category", 
-      width: 150
+      width: 150,
+      renderCell: (params) => (
+        <Typography variant="body2">
+          {formatCategory(params.row.category)}
+        </Typography>
+      )
     },
     {
         field: "postPicture",
@@ -74,7 +80,9 @@ const DashboardPosts = () => {
         width: 120,
         renderCell: (params) => {
           return (
-            <img src={params.row.postPicture} width={40} height={40}/>
+            <Link to={`/post/${params.row._id}`}>
+              <img src={params.row.postPicture} width={40} height={40}/>
+            </Link>
           )
         }
     },
