@@ -3,6 +3,7 @@ import { BottomNavigation, BottomNavigationAction, Box, List, ListItem, ListItem
 import PeopleIcon from '@mui/icons-material/People'
 import DescriptionIcon from '@mui/icons-material/Description'
 import CommentIcon from '@mui/icons-material/Comment'
+import HomeIcon from '@mui/icons-material/Home'
 import { useState } from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
@@ -27,6 +28,14 @@ const DashboardPage = () => {
                     <Box width={{ sm: "180px" }}>
                         <Stack height={"calc(100vh - 68px)"} sx={{ borderRight: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040" }}>
                             <List sx={{ py: 0 }}>
+                                <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
+                                    <ListItemButton selected={pathname === "/dashboard"} component={Link} to="/dashboard">
+                                        <ListItemIcon>
+                                            <HomeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Dashboard" />
+                                    </ListItemButton>
+                                </ListItem>
                                 <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
                                     <ListItemButton selected={pathname === "/dashboard/users"} component={Link} to="/dashboard/users">
                                         <ListItemIcon>
@@ -54,9 +63,15 @@ const DashboardPage = () => {
                             </List>
                         </Stack>
                     </Box>
-                    <Box width={"calc(100vw - 180px)"} sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
-                        <Outlet />
-                    </Box>
+                    {pathname === "/dashboard" ? (
+                        <Box p={3}>
+                            <Outlet />
+                        </Box>
+                    ) : (
+                        <Box width={"calc(100vw - 180px)"} sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
+                            <Outlet />
+                        </Box>
+                    )}
                 </Box>
             ) : (
                 <Box mt={8}>
@@ -69,6 +84,11 @@ const DashboardPage = () => {
                             value={value}
                             onChange={handleValueChange}
                         >
+                            <BottomNavigationAction 
+                                value={"/dashboard"}
+                                label="Dashboard"
+                                icon={<HomeIcon />}
+                            />
                             <BottomNavigationAction 
                                 value={"/dashboard/users"}
                                 label="Users"

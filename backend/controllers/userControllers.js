@@ -115,3 +115,19 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const getTotalNumberOfUsers = async (req, res) => {
+    try {
+        const currentDate = new Date()
+        const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+
+        const totalUsers = await User.countDocuments()
+        const totalUsersLastMonth = await User.countDocuments({ createdAt: { $gte: lastMonthStartDate }})
+
+        res.status(200).json({ totalUsers, totalUsersLastMonth })
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}

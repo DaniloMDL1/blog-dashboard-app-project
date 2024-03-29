@@ -52,3 +52,14 @@ export const categories = [
         urlName: "technology"
     },
 ]
+
+export const sortValues = [
+    {
+        name: "Asc",
+        urlName: "asc"
+    },
+    {
+        name: "Desc",
+        urlName: "desc"
+    }
+]

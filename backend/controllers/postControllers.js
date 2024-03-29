@@ -174,6 +174,7 @@ export const getSearchPosts = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 0
         const pageSize = parseInt(req.query.pageSize) || 8
+        const sort = req.query.sort === "asc" ? 1 : -1
         let totalPosts
 
         const posts = await Post.find({ 
@@ -188,7 +189,7 @@ export const getSearchPosts = async (req, res) => {
                 ],
             }),
             ...(req.query.category && { category: req.query.category })
-        }).skip((page - 1) * pageSize).limit(pageSize)
+        }).skip((page - 1) * pageSize).limit(pageSize).sort({ createdAt: sort })
 
         if(req.query.searchTerm) {
             totalPosts = await Post.countDocuments({ 
@@ -219,6 +220,22 @@ export const getPopularPosts = async (req, res) => {
         const posts = await Post.find().sort({ views: -1 }).limit(8)
 
         res.status(200).json(posts)
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getTotalNumberOfPosts = async (req, res) => {
+    try {
+        const currentDate = new Date()
+        const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+
+        const totalPosts = await Post.countDocuments()
+        const totalPostsLastMonth = await Post.countDocuments({ createdAt: { $gte: lastMonthStartDate }})
+
+        res.status(200).json({ totalPosts, totalPostsLastMonth })
         
     } catch(error) {
         console.log(error)

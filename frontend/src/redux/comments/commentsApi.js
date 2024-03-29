@@ -47,8 +47,15 @@ export const commentsApi = api.injectEndpoints({
                 params: { page, pageSize }
             }),
             providesTags: ["Comments"]
+        }),
+        getTotalNumberOfComments: builder.query({
+            query: () => ({
+                url: `${COMMENTS_URL}/total`,
+                method: "GET"
+            }),
+            providesTags: ["Comments"]
         })
     })
 })
 
-export const { useCreateCommentMutation, useGetPostCommentsQuery, useDeleteCommentMutation, useLikeUnlikeCommentMutation, useUpdateCommentMutation, useGetAllComentsQuery } = commentsApi
+export const { useCreateCommentMutation, useGetPostCommentsQuery, useDeleteCommentMutation, useLikeUnlikeCommentMutation, useUpdateCommentMutation, useGetAllComentsQuery, useGetTotalNumberOfCommentsQuery } = commentsApi

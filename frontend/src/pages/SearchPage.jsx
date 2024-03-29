@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useGetSearchPostsQuery } from "../redux/posts/postsApi"
 import { useTheme } from "@emotion/react"
-import { categories } from "../utils/constants"
+import { categories, sortValues } from "../utils/constants"
 import PostCard from "../components/PostCard"
 
 const SearchPage = () => {
@@ -17,11 +17,13 @@ const SearchPage = () => {
 
     const [searchTerm, setSearchTerm] = useState("")
     const [category, setCategory] = useState("")
+    const [sort, setSort] = useState("")
     const [page, setPage] = useState(1)
 
     useEffect(() => {
         const searchParamsSearchTerm = searchParams.get("searchTerm")?.replace(/-/g, " ")
         const searchParamsCategory = searchParams.get("category")
+        const searchParamsSort = searchParams.get("sort")
 
         if(searchParamsSearchTerm) {
             setSearchTerm(searchParamsSearchTerm)
@@ -30,16 +32,28 @@ const SearchPage = () => {
         if(searchParamsCategory) {
             setCategory(searchParamsCategory)
         }
+
+        if(searchParamsSort) {
+            setSort(searchParamsSort)
+        }
     }, [search, setSearchTerm, setCategory])
 
-    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm")?.replace(/-/g, " ") || "", page, category: searchParams.get("category") || "" })
+    const { data: searchPostData, isLoading: isSearchPostLoading } = useGetSearchPostsQuery({ searchTerm: searchParams.get("searchTerm")?.replace(/-/g, " ") || "", page, category: searchParams.get("category") || "", sort: searchParams.get("sort") || "" })
 
     const handleFilter = (e) => {
         e.preventDefault()
         if(searchTerm.trim()) {
-            navigate(`/search?searchTerm=${searchTerm.replace(/\s+/g, "-")}${category ? `&category=${category}` : ""}`)
+            navigate(`/search?searchTerm=${searchTerm.replace(/\s+/g, "-")}${category ? `&category=${category}` : ""}${sort ? `&sort=${sort}` : ""}`)
         } else {
-            navigate(`/search${category ? `?category=${category}` : ""}`)
+            navigate(`/search${category ? `?category=${category}` : ""}${sort ? `?sort=${sort}` : ""}`)
+        }
+
+        if(category && sort) {
+            navigate(`/search?category=${category}&sort=${sort}`)
+        }
+
+        if(searchTerm.trim() && category && sort) {
+            navigate(`/search?searchTerm=${searchTerm.replace(/\s+/g, "-")}&category=${category}&sort=${sort}`)
         }
     }
 
@@ -112,6 +126,30 @@ const SearchPage = () => {
                         ))}
                     </Select>
                 </FormControl>
+                <FormControl size="small" sx={{ width: "220px"}}>
+                    <InputLabel>Sort</InputLabel>
+                    <Select
+                        label="Category"
+                        MenuProps={{
+                            anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: 0
+                            },
+                            transformOrigin: {
+                                vertical: "top",
+                                horizontal: 0
+                            },
+                        }}
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                    >
+                        {sortValues.map((c) => (
+                            <MenuItem key={c.name} value={c.urlName}>
+                                {c.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <Button type="submit" variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, "&:hover": {
                     backgroundColor: theme.palette.secondary.dark
                 } }}>
@@ -121,6 +159,7 @@ const SearchPage = () => {
                     navigate("/search")
                     setSearchTerm("")
                     setCategory("")
+                    setSort("")
                 }} type="button" variant="contained">
                     Clear Filters
                 </Button>

@@ -122,3 +122,19 @@ export const getAllComments = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const getTotalNumberOfComments = async (req, res) => {
+    try {
+        const currentDate = new Date()
+        const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+
+        const totalComments = await Comment.countDocuments()
+        const totalCommentsLastMonth = await Comment.countDocuments({ createdAt: { $gte: lastMonthStartDate }})
+
+        res.status(200).json({ totalComments, totalCommentsLastMonth })
+        
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}

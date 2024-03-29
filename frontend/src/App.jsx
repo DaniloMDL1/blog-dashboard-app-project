@@ -12,6 +12,7 @@ import SearchPage from "./pages/SearchPage"
 import DashboardUsers from "./components/DashboardUsers"
 import DashboardPosts from "./components/DashboardPosts"
 import DashboardComments from "./components/DashboardComments"
+import DashboardHome from "./components/DashboardHome"
 import HeaderLayout from "./layouts/HeaderLayout"
 import { ThemeProvider, createTheme } from "@mui/material"
 import CssBaseline from '@mui/material/CssBaseline'
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/post/:slug" element={<PostPage />}/>
             <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/signin"}/>}>
+              <Route index element={<DashboardHome />}/>
               <Route path="users" element={user?.isAdmin ? <DashboardUsers /> : <Navigate to={"/signin"}/>}/>
               <Route path="posts" element={user?.isAdmin ? <DashboardPosts /> : <Navigate to={"/signin"}/>}/>
               <Route path="comments" element={user?.isAdmin ? <DashboardComments /> : <Navigate to={"/signin"}/>}/>

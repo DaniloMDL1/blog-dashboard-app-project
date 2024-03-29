@@ -32,8 +32,15 @@ export const usersApi = api.injectEndpoints({
                 method: "GET"
             }),
             providesTags: ["User"]
+        }),
+        getTotalNumberOfUsers: builder.query({
+            query: () => ({
+                url: `${USERS_URL}/total`,
+                method: "GET"
+            }),
+            providesTags: ["User"]
         })
     })
 })
 
-export const { useUpdateUserProfileMutation, useDeleteUserAccountMutation, useGetAllUsersQuery, useGetUserQuery } = usersApi
+export const { useUpdateUserProfileMutation, useDeleteUserAccountMutation, useGetAllUsersQuery, useGetUserQuery, useGetTotalNumberOfUsersQuery } = usersApi
