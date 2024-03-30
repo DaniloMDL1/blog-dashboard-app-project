@@ -5,7 +5,7 @@ import PostCard from "../components/PostCard"
 const HomePage = () => {
 
   // get recent posts
-  const { data: recentPostData, isLoading: isRecentPostsLoading } = useGetRecentPostsQuery()
+  const { data: recentPostData, isLoading: isRecentPostsLoading } = useGetRecentPostsQuery({ limit: 20 })
 
   // get popular posts
   const { data: popularPostData, isLoading: isPopularPostsLoading } = useGetPopularPostsQuery()

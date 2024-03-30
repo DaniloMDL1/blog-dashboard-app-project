@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react"
-import { Avatar, Button, CircularProgress, Container, IconButton, Link, Menu, MenuItem, Stack, Tooltip } from "@mui/material"
+import { Avatar, Box, Button, CircularProgress, Container, IconButton, Link, Menu, MenuItem, Stack, Tooltip } from "@mui/material"
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import PostAddIcon from '@mui/icons-material/PostAdd'
@@ -54,80 +54,85 @@ const Header = () => {
     return (
         <>
             {!user ? (
-                <Container maxWidth="md" sx={{ py: "10px" }}>
-                    <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
-                        <Link component={RouterLink} to={"/"} variant="h5" sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
-                            Blog App
-                        </Link>
-                        <Stack flexDirection={"row"} alignItems={"center"} gap={3}>
-                            <Tooltip title="Search" arrow>
-                                <IconButton onClick={handleOpenSearchModal} sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
-                                    <SearchIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <SearchInputModal open={openSearchModal} handleClose={handleCloseSearchModal}/>
-                            <Link component={RouterLink} to={"/signup"} variant="body1">
-                                Sign Up
+                <Box position={"fixed"} top={0} left={0} right={0} sx={{ backgroundColor: theme.palette.background.default, zIndex: 100, py: "10px" }}>
+                    <Container maxWidth="md">
+                        <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Link component={RouterLink} to={"/"} variant={"h5"} sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
+                                Blog App
                             </Link>
-                            <Link component={RouterLink} to={"/signin"} variant="body1">
-                                Sign In
-                            </Link>
+                            <Stack flexDirection={"row"} alignItems={"center"} gap={3}>
+                                <Tooltip title="Search" arrow>
+                                    <IconButton onClick={handleOpenSearchModal} sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <SearchInputModal open={openSearchModal} handleClose={handleCloseSearchModal}/>
+                                <Link component={RouterLink} to={"/signup"} variant="body1">
+                                    Sign Up
+                                </Link>
+                                <Link component={RouterLink} to={"/signin"} variant="body1">
+                                    Sign In
+                                </Link>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </Container>
+                    </Container>
+
+                </Box>
             ) : (
-                <Container maxWidth="md" sx={{ py: "10px" }}>
-                    <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
-                        <Link component={RouterLink} to={"/"} variant="h5" sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
-                            Blog App
-                        </Link>
-                        <Stack flexDirection={"row"} alignItems={"center"} gap={3}>
-                            <Tooltip title="Search" arrow>
-                                <IconButton onClick={handleOpenSearchModal} sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
-                                    <SearchIcon />
+                <Box position={"fixed"} top={0} left={0} right={0} sx={{ backgroundColor: theme.palette.background.default, zIndex: 100, py: "10px" }}>
+                    <Container maxWidth="md">
+                        <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Link component={RouterLink} to={"/"} variant="h5" sx={{ textDecoration: "none", color: theme.palette.text.primary, "&:hover": { color: theme.palette.primary.main}}}>
+                                Blog App
+                            </Link>
+                            <Stack flexDirection={"row"} alignItems={"center"} gap={3}>
+                                <Tooltip title="Search" arrow>
+                                    <IconButton onClick={handleOpenSearchModal} sx={{ color: theme.palette.mode === "light" ? "#424242" : "#9e9e9e" }}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <SearchInputModal open={openSearchModal} handleClose={handleCloseSearchModal}/>
+                                <Tooltip title="Create Post" arrow>
+                                    <Button component={RouterLink} to={"/create-post"} variant="contained" sx={{ height: "32px", display: "flex", alignItems: "center", gap: "3px"}}>
+                                        <PostAddIcon />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Switch theme" arrow>
+                                    <IconButton onClick={() => dispatch(setMode())} sx={{ color: theme.palette.text.primary }}>
+                                        {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+                                    </IconButton>
+                                </Tooltip>
+                                <IconButton onClick={handleClick}>
+                                    <Avatar src={user.profilePicture} sx={{ width: 32, height: 32 }} />
                                 </IconButton>
-                            </Tooltip>
-                            <SearchInputModal open={openSearchModal} handleClose={handleCloseSearchModal}/>
-                            <Tooltip title="Create Post" arrow>
-                                <Button component={RouterLink} to={"/create-post"} variant="contained" sx={{ height: "32px", display: "flex", alignItems: "center", gap: "3px"}}>
-                                    <PostAddIcon />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Switch theme" arrow>
-                                <IconButton onClick={() => dispatch(setMode())} sx={{ color: theme.palette.text.primary }}>
-                                    {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-                                </IconButton>
-                            </Tooltip>
-                            <IconButton onClick={handleClick}>
-                                <Avatar src={user.profilePicture} sx={{ width: 32, height: 32 }} />
-                            </IconButton>
-                            <Menu
-                                elevation={3}
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                                sx={{
-                                    "& .MuiMenu-list": {
-                                        py: 0,
-                                        width: "140px"
-                                    },
-                                    "& .MuiMenuItem-root": {
-                                        py: 1,
-                                    }
-                                }}
-                            >
-                                <MenuItem component={RouterLink} to={`/profile/${user.username}`}>Profile</MenuItem>
-                                <MenuItem component={RouterLink} to={"/your-posts?page=1"}>Your Posts</MenuItem>
-                                {user.isAdmin && (
-                                    <MenuItem component={RouterLink} to={`/dashboard`}>Dashboard</MenuItem>
-                                )}
-                                <MenuItem onClick={handleSignOut} disabled={isLoading}>
-                                    {isLoading ? <CircularProgress size={18}/> : "Sign Out"}
-                                </MenuItem>
-                            </Menu>
+                                <Menu
+                                    elevation={3}
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    sx={{
+                                        "& .MuiMenu-list": {
+                                            py: 0,
+                                            width: "140px"
+                                        },
+                                        "& .MuiMenuItem-root": {
+                                            py: 1,
+                                        }
+                                    }}
+                                >
+                                    <MenuItem component={RouterLink} to={`/profile/${user.username}`}>Profile</MenuItem>
+                                    <MenuItem component={RouterLink} to={"/your-posts?page=1"}>Your Posts</MenuItem>
+                                    {user.isAdmin && (
+                                        <MenuItem component={RouterLink} to={`/dashboard`}>Dashboard</MenuItem>
+                                    )}
+                                    <MenuItem onClick={handleSignOut} disabled={isLoading}>
+                                        {isLoading ? <CircularProgress size={18}/> : "Sign Out"}
+                                    </MenuItem>
+                                </Menu>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </Container>
+                    </Container>
+                </Box>
             )}
         </>
     )

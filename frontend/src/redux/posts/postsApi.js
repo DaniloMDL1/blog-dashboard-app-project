@@ -55,9 +55,10 @@ export const postsApi = api.injectEndpoints({
             providesTags: ["Posts"]
         }),
         getRecentPosts: builder.query({
-            query: () => ({
+            query: ({ limit }) => ({
                 url: `${POSTS_URL}/recent`,
-                method: "GET"
+                method: "GET",
+                params: { limit }
             }),
             providesTags: ["Posts"]
         }),

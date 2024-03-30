@@ -1,7 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid"
 import { useDeleteUserAccountMutation, useGetAllUsersQuery } from "../redux/user/usersApi"
 import { useEffect, useState } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Avatar, Box, IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete'
 import { toast } from "react-toastify"
 import DeleteUserFromDataGridModal from "./DeleteUserFromDataGridModal"
@@ -48,6 +48,16 @@ const DashboardUsers = () => {
     }
 
     const columns = [
+        {
+            field: "profilePicture",
+            headerName: "Profile picture",
+            width: 120,
+            renderCell: (params) => {
+                return (
+                    <Avatar src={params.row.profilePicture}/>
+                )
+            }
+        },
         {
             field: "_id",
             headerName: "ID",

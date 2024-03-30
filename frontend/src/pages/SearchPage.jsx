@@ -64,12 +64,23 @@ const SearchPage = () => {
 
         const searchParamsSearchTerm = searchParams.get("searchTerm")?.replace(/\s+/g, "-")
         const searchParamsCategory = searchParams.get("category")
+        const searchParamsSort = searchParams.get("sort")
 
         if(searchParamsSearchTerm) {
-            navigate(`/search?searchTerm=${searchParamsSearchTerm}${searchParamsCategory ? `&category=${searchParamsCategory}` : ""}&page=${page}`)
+            navigate(`/search?searchTerm=${searchParamsSearchTerm}${searchParamsCategory ? `&category=${searchParamsCategory}` : ""}${searchParamsSort ? `&sort=${searchParamsSort}` : ""}&page=${page}`)
         } else {
             navigate(`/search${searchParamsCategory ? `?category=${searchParamsCategory}&page=${page}` : `?page=${page}`}`)
         }
+
+        if(searchParamsSort) {
+            navigate(`/search?sort=${searchParamsSort}&page=${page}`)
+        }
+
+        if(searchParamsCategory && searchParamsSort) {
+            navigate(`/search?category=${searchParamsCategory}&sort=${searchParamsSort}&page=${page}`)
+        }
+
+        window.scrollTo(0, 0)
     }
 
     return (
@@ -160,6 +171,7 @@ const SearchPage = () => {
                     setSearchTerm("")
                     setCategory("")
                     setSort("")
+                    setPage(1)
                 }} type="button" variant="contained">
                     Clear Filters
                 </Button>

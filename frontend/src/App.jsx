@@ -43,7 +43,7 @@ const App = () => {
             <Route path="/post/:slug" element={<PostPage />}/>
             <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to={"/signin"}/>}/>
             <Route path="/dashboard" element={user?.isAdmin ? <DashboardPage /> : <Navigate to={"/signin"}/>}>
-              <Route index element={<DashboardHome />}/>
+              <Route index element={user?.isAdmin ? <DashboardHome /> : <Navigate to={"/signin"}/>}/>
               <Route path="users" element={user?.isAdmin ? <DashboardUsers /> : <Navigate to={"/signin"}/>}/>
               <Route path="posts" element={user?.isAdmin ? <DashboardPosts /> : <Navigate to={"/signin"}/>}/>
               <Route path="comments" element={user?.isAdmin ? <DashboardComments /> : <Navigate to={"/signin"}/>}/>

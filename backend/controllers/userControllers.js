@@ -89,7 +89,7 @@ export const getAllUsers = async (req, res) => {
 
         if(!loggedInUserIsAdmin) return res.status(403).json({ error: "User is not allowed to get all users." })
 
-        const users = await User.find({ _id: { $ne: loggedInUserId}}).select("-password").skip(skip).limit(pageSize).sort({ createdAt: -1 })
+        const users = await User.find({ _id: { $ne: loggedInUserId }}).select("-password").skip(skip).limit(pageSize).sort({ createdAt: -1 })
 
         const totalUsers = await User.countDocuments({ _id : { $ne: loggedInUserId }})
 
@@ -119,13 +119,26 @@ export const getUser = async (req, res) => {
 export const getTotalNumberOfUsers = async (req, res) => {
     try {
         const currentDate = new Date()
-        const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+        const oneMonthAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate())
 
         const totalUsers = await User.countDocuments()
-        const totalUsersLastMonth = await User.countDocuments({ createdAt: { $gte: lastMonthStartDate }})
+        const totalUsersLastMonth = await User.countDocuments({ createdAt: { $gte: oneMonthAgo }})
 
         res.status(200).json({ totalUsers, totalUsersLastMonth })
         
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getRecentUsers = async (req, res) => {
+    try {
+        const loggedInUserId = req.user.userId
+
+        const users = await User.find({ _id: { $ne: loggedInUserId }}).select("-password").sort({ createdAt: -1 }).limit(5)
+        
+        res.status(200).json(users)
     } catch(error) {
         console.log(error)
         res.status(500).json({ error: error.message })

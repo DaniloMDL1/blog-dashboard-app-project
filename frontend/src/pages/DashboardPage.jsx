@@ -25,8 +25,8 @@ const DashboardPage = () => {
         <>
             {isNonMobileScreen ? (
                 <Box display={"flex"} flexDirection={"row"}>
-                    <Box width={{ sm: "180px" }}>
-                        <Stack height={"calc(100vh - 68px)"} sx={{ borderRight: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040" }}>
+                    <Box width={{ sm: "180px" }} pt={"28px"}>
+                        <Stack height={"calc(100vh - 68px)"} sx={{ borderRight: "1px solid", borderColor: theme.palette.mode === "light" ? "#d4d4d8" : "#404040", position: "fixed" }}>
                             <List sx={{ py: 0 }}>
                                 <ListItem sx={{ color: theme.palette.text.primary}} disablePadding>
                                     <ListItemButton selected={pathname === "/dashboard"} component={Link} to="/dashboard">
@@ -64,11 +64,11 @@ const DashboardPage = () => {
                         </Stack>
                     </Box>
                     {pathname === "/dashboard" ? (
-                        <Box p={3}>
+                        <Box px={3} pt={5}>
                             <Outlet />
                         </Box>
                     ) : (
-                        <Box width={"calc(100vw - 180px)"} sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <Box width={"calc(100vw - 180px)"} sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 68px)"}}>
                             <Outlet />
                         </Box>
                     )}

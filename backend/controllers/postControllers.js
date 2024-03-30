@@ -160,7 +160,8 @@ export const getUserPosts = async (req, res) => {
 
 export const getRecentPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).limit(20)
+        const limit = parseInt(req.query.limit) || 20
+        const posts = await Post.find().sort({ createdAt: -1 }).limit(limit)
 
         res.status(200).json(posts)
         
@@ -230,10 +231,10 @@ export const getPopularPosts = async (req, res) => {
 export const getTotalNumberOfPosts = async (req, res) => {
     try {
         const currentDate = new Date()
-        const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+        const oneMonthAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate())
 
         const totalPosts = await Post.countDocuments()
-        const totalPostsLastMonth = await Post.countDocuments({ createdAt: { $gte: lastMonthStartDate }})
+        const totalPostsLastMonth = await Post.countDocuments({ createdAt: { $gte: oneMonthAgo }})
 
         res.status(200).json({ totalPosts, totalPostsLastMonth })
         

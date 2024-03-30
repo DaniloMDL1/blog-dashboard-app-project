@@ -39,8 +39,15 @@ export const usersApi = api.injectEndpoints({
                 method: "GET"
             }),
             providesTags: ["User"]
+        }),
+        getRecentUsers: builder.query({
+            query: () => ({
+                url: `${USERS_URL}/recent`,
+                method: "GET"
+            }),
+            providesTags: ["User"]
         })
     })
 })
 
-export const { useUpdateUserProfileMutation, useDeleteUserAccountMutation, useGetAllUsersQuery, useGetUserQuery, useGetTotalNumberOfUsersQuery } = usersApi
+export const { useUpdateUserProfileMutation, useDeleteUserAccountMutation, useGetAllUsersQuery, useGetUserQuery, useGetTotalNumberOfUsersQuery, useGetRecentUsersQuery } = usersApi

@@ -2,7 +2,7 @@ import { IconButton, Paper, Stack, Typography } from "@mui/material"
 
 const TotalNumberCard = ({ total, totalLastMonth, Icon, label }) => {
   return (
-    <Paper elevation={1} sx={{ p: 1, width: "220px"}}>
+    <Paper elevation={1} sx={{ p: 1, width: "240px"}}>
         <Stack flexDirection={"row"} alignItems={"center"} justifyContent={"space-between"}>
             <Typography variant="body1">
                 TOTAL {label}
